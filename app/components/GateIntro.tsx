@@ -92,7 +92,7 @@ export default function GateIntro({
             <div className="absolute inset-2 rounded-full border border-[#F5D998]/20" />
             
             <div className="w-[64%] h-[64%] rounded-full bg-white/90 flex items-center justify-center overflow-hidden p-1.5">
-              <img src="/images/logo1.png" alt="Farhty" className="w-full h-full object-contain" />
+              <img src="/images/logo1.webp" alt="Farhty" className="w-full h-full object-contain" />
             </div>
 
             {/* Instruction Text */}

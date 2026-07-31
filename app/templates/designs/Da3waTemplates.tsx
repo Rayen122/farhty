@@ -82,30 +82,30 @@ const CARD_BOX_STYLE: React.CSSProperties = {
 
 /* ── Background image for the details page (after video ends) ── */
 const templateBgImageMap: Record<string, string> = {
-  classic: "/images/bg_classic.png",
-  bab: "/images/bg_bab.png",
-  reverie: "/images/bg_reverie.png",
-  ring: "/images/bg_ring.png",
-  disney: "/images/bg_disney.png",
-  royal: "/images/royal_curtains_4k.png",
-  letter: "/images/tunisian_invitation_interior.png",
-  rozana: "/images/bg_classic.png",
-  hadeel: "/images/bg_reverie.png",
-  vangogh: "/images/bg_disney.png",
-  blush: "/images/bg_reverie.png",
-  glam: "/images/bg_ring.png",
-  "aroussa-tn": "/images/bg_aroussa_tn.png",
-  "jasmin-tn": "/images/bg_jasmin_tn.png",
-  "keswa-tn": "/images/tunisian_invitation_interior.png",
-  "rideau-royal": "/images/royal_curtains_4k.png",
-  "enveloppe-tunisienne": "/images/tunisian_invitation_interior.png",
-  "lanternes-celestes": "/images/bg_reverie.png",
-  "palais-cristal": "/images/bg_ring.png",
-  "jardin-royal": "/images/royal_garden.png",
-  "oasis-etoilee": "/images/bg_aroussa_tn.png",
-  "porte-chateau": "/images/la_joie_columns_gate_4k.png",
-  "parchemin-royal": "/images/gold_branches_4k.png",
-  "lettre-royale": "/images/gold_branches_4k.png",
+  classic: "/images/bg_classic.webp",
+  bab: "/images/bg_bab.webp",
+  reverie: "/images/bg_reverie.webp",
+  ring: "/images/bg_ring.webp",
+  disney: "/images/bg_disney.webp",
+  royal: "/images/royal_curtains_4k.webp",
+  letter: "/images/tunisian_invitation_interior.webp",
+  rozana: "/images/bg_classic.webp",
+  hadeel: "/images/bg_reverie.webp",
+  vangogh: "/images/bg_disney.webp",
+  blush: "/images/bg_reverie.webp",
+  glam: "/images/bg_ring.webp",
+  "aroussa-tn": "/images/bg_aroussa_tn.webp",
+  "jasmin-tn": "/images/bg_jasmin_tn.webp",
+  "keswa-tn": "/images/tunisian_invitation_interior.webp",
+  "rideau-royal": "/images/royal_curtains_4k.webp",
+  "enveloppe-tunisienne": "/images/tunisian_invitation_interior.webp",
+  "lanternes-celestes": "/images/bg_reverie.webp",
+  "palais-cristal": "/images/bg_ring.webp",
+  "jardin-royal": "/images/royal_garden.webp",
+  "oasis-etoilee": "/images/bg_aroussa_tn.webp",
+  "porte-chateau": "/images/la_joie_columns_gate_4k.webp",
+  "parchemin-royal": "/images/gold_branches_4k.webp",
+  "lettre-royale": "/images/gold_branches_4k.webp",
 };
 
 interface ThemeStyle {
@@ -448,7 +448,7 @@ export default function Da3waTemplates({ template, customData }: Props) {
   const videoSrc = template.video || templateVideoMap[template.slug];
   const bgImage = template.image || `/site/tpl/${template.slug}-cover.jpg`;
   const theme = templateThemeMap[template.slug] || defaultTheme;
-  const detailsBgImage = templateBgImageMap[template.slug] || "/images/la_joie_columns_4k.png";
+  const detailsBgImage = templateBgImageMap[template.slug] || "/images/la_joie_columns_4k.webp";
 
   const isFullVideo = FULL_VIDEO_SLUGS.has(template.slug);
   const isCinematicLetter = CINEMATIC_LETTER_SLUGS.has(template.slug);
@@ -747,7 +747,7 @@ export default function Da3waTemplates({ template, customData }: Props) {
             animate={{ scale: 1.05 }}
             transition={{ duration: 30, ease: "easeOut" }}
             onError={(e) => {
-              (e.target as HTMLImageElement).src = "/images/la_joie_columns_4k.png";
+              (e.target as HTMLImageElement).src = "/images/la_joie_columns_4k.webp";
             }}
           />
         )}

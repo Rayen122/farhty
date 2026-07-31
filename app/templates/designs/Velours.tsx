@@ -385,7 +385,7 @@ export default function Velours({ template }: { template: Template }) {
             >
               <div className="text-center relative z-10">
                 <div className="w-24 h-24 mx-auto rounded-full bg-white/90 flex items-center justify-center overflow-hidden p-3">
-                  <img src="/images/logo1.png" alt="Farhty" className="w-full h-full object-contain" />
+                  <img src="/images/logo1.webp" alt="Farhty" className="w-full h-full object-contain" />
                 </div>
                 <p className="text-[9px] uppercase tracking-[0.45em] text-white/40 mt-3">تصويرتكم</p>
               </div>
@@ -520,7 +520,7 @@ export default function Velours({ template }: { template: Template }) {
                 <div
                   className="absolute left-1/2 top-[46%] -translate-x-1/2 -translate-y-1/2 w-11 h-11 rounded-full flex items-center justify-center shadow-lg overflow-hidden p-1.5 bg-white/95"
                 >
-                  <img src="/images/logo1.png" alt="Farhty" className="w-full h-full object-contain" />
+                  <img src="/images/logo1.webp" alt="Farhty" className="w-full h-full object-contain" />
                 </div>
               </div>
               <p className="mt-6 text-[10px] uppercase tracking-[0.4em] text-white/50 flex items-center justify-center gap-2">

@@ -107,7 +107,7 @@ export default function LaJoie({ template }: LaJoieProps) {
             {/* Background 4K Marble Colonnade Photo */}
             <div className="absolute inset-0 pointer-events-none">
               <img
-                src="/images/la_joie_columns_gate_4k.png"
+                src="/images/la_joie_columns_gate_4k.webp"
                 alt="Palais de Marbre 4K"
                 className="w-full h-full object-cover object-center filter brightness-[0.98] contrast-[1.02]"
               />
@@ -212,7 +212,7 @@ export default function LaJoie({ template }: LaJoieProps) {
                 }}
               >
                 <img
-                  src="/images/la_joie_columns_gate_4k.png"
+                  src="/images/la_joie_columns_gate_4k.webp"
                   alt="Colonnade de marbre"
                   className="w-[200%] h-full object-cover object-left opacity-95"
                 />
@@ -230,7 +230,7 @@ export default function LaJoie({ template }: LaJoieProps) {
                 }}
               >
                 <img
-                  src="/images/la_joie_columns_gate_4k.png"
+                  src="/images/la_joie_columns_gate_4k.webp"
                   alt="Colonnade de marbre"
                   className="w-[200%] h-full object-cover object-right opacity-95"
                 />
@@ -364,7 +364,7 @@ export default function LaJoie({ template }: LaJoieProps) {
         {/* Background 4K Marble Colonnade Hero Photo */}
         <div className="absolute inset-0 pointer-events-none">
           <img
-            src="/images/la_joie_columns_4k.png"
+            src="/images/la_joie_columns_4k.webp"
             alt="Colonnade de marbre 4K"
             className="w-full h-full object-cover object-center filter contrast-[1.02] brightness-[0.97] scale-105"
           />

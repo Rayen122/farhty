@@ -207,7 +207,7 @@ export default function RoyalInvitationIntro({
                 <div className="absolute inset-3 rounded-full border border-amber-900/20 pointer-events-none" />
 
                 <div className="w-[62%] h-[62%] rounded-full bg-white/90 flex items-center justify-center overflow-hidden p-2">
-                  <img src="/images/logo1.png" alt="Farhty" className="w-full h-full object-contain" />
+                  <img src="/images/logo1.webp" alt="Farhty" className="w-full h-full object-contain" />
                 </div>
               </motion.div>
 

@@ -235,7 +235,7 @@ export default function Tunisian({ template }: TunisianProps) {
         {/* Background Image with Parallax effect */}
         <div className="absolute inset-0 z-0">
           <img
-            src="/images/tunisian_invitation_interior.png"
+            src="/images/tunisian_invitation_interior.webp"
             alt="Background"
             className="w-full h-full object-cover opacity-15 filter blur-[2px]"
           />

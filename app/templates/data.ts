@@ -57,7 +57,7 @@ export const templates: Template[] = [
     },
     style: "da3wa-porte-chateau",
     video: "/templates/bab/assets/door.mp4",
-    image: "/images/royal_gates.png"
+    image: "/images/royal_gates.webp"
   },
   {
     id: 302,
@@ -88,7 +88,7 @@ export const templates: Template[] = [
     },
     style: "da3wa-palais-or",
     video: "/videos/palais-or.mp4",
-    image: "/images/golden_palace.png"
+    image: "/images/golden_palace.webp"
   },
   {
     id: 304,
@@ -119,7 +119,7 @@ export const templates: Template[] = [
     },
     style: "da3wa-parchemin-royal",
     video: "/videos/scroll-parchemin.mp4",
-    image: "/images/royal_scroll.png"
+    image: "/images/royal_scroll.webp"
   },
   {
     id: 305,
@@ -150,7 +150,7 @@ export const templates: Template[] = [
     },
     style: "da3wa-lettre-royale",
     video: "/videos/v1.mp4",
-    image: "/images/velvet_envelope.png"
+    image: "/images/velvet_envelope.webp"
   },
   {
     id: 203,
@@ -181,7 +181,7 @@ export const templates: Template[] = [
     },
     style: "da3wa-lanternes",
     video: "/videos/sindrella.mp4",
-    image: "/images/floating_lanterns.png"
+    image: "/images/floating_lanterns.webp"
   },
   {
     id: 204,
@@ -212,7 +212,7 @@ export const templates: Template[] = [
     },
     style: "da3wa-cristal",
     video: "/templates/ring/assets/box-video.mp4",
-    image: "/images/crystal_box.png"
+    image: "/images/crystal_box.webp"
   },
   {
     id: 205,
@@ -243,7 +243,7 @@ export const templates: Template[] = [
     },
     style: "da3wa-jardin-royal",
     video: "/templates/reverie/assets/envelope.mp4",
-    image: "/images/royal_garden.png"
+    image: "/images/royal_garden.webp"
   },
   {
     id: 206,
@@ -274,7 +274,7 @@ export const templates: Template[] = [
     },
     style: "da3wa-oasis",
     video: "/templates/rozana/assets/entrance.mp4",
-    image: "/images/bg_bab.png"
+    image: "/images/bg_bab.webp"
   },
   {
     id: 101,
@@ -304,7 +304,7 @@ export const templates: Template[] = [
       photos: ["1", "2", "3"],
     },
     style: "da3wa-classic",
-    image: "/images/bg_classic.png"
+    image: "/images/bg_classic.webp"
   },
   {
     id: 1,
@@ -337,7 +337,7 @@ export const templates: Template[] = [
       photos: ["1", "2", "3"],
     },
     style: "marsala-3d",
-    image: "/images/lella_beya_4k.png"
+    image: "/images/lella_beya_4k.webp"
   },
   {
     id: 6,
@@ -370,7 +370,7 @@ export const templates: Template[] = [
       photos: ["1", "2", "3"],
     },
     style: "imperiale",
-    image: "/images/royal_curtains_4k.png",
+    image: "/images/royal_curtains_4k.webp",
   },
   {
     id: 7,
@@ -403,7 +403,7 @@ export const templates: Template[] = [
       photos: ["1", "2", "3"],
     },
     style: "jardin",
-    image: "/images/bg_reverie.png",
+    image: "/images/bg_reverie.webp",
   },
   {
     id: 8,
@@ -436,7 +436,7 @@ export const templates: Template[] = [
       photos: ["1", "2", "3"],
     },
     style: "amour",
-    image: "/images/amour_4k.png",
+    image: "/images/amour_4k.webp",
   },
   {
     id: 9,
@@ -469,7 +469,7 @@ export const templates: Template[] = [
       photos: ["1", "2", "3"],
     },
     style: "la-joie",
-    image: "/images/la_joie_columns_4k.png",
+    image: "/images/la_joie_columns_4k.webp",
   },
   {
     id: 11,
@@ -502,7 +502,7 @@ export const templates: Template[] = [
       photos: ["1", "2", "3"],
     },
     style: "jasmin",
-    image: "/images/jasmin_bg.jpg",
+    image: "/images/jasmin_bg.webp",
   },
   {
     id: 13,
@@ -535,7 +535,7 @@ export const templates: Template[] = [
       photos: ["1", "2", "3"],
     },
     style: "tunisian",
-    image: "/images/tunisian_envelope_exterior.png",
+    image: "/images/tunisian_envelope_exterior.webp",
   },
 ];
 

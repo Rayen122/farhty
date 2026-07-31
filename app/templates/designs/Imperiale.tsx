@@ -180,7 +180,7 @@ export default function Imperiale({ template }: { template: Template }) {
           transition={{ duration: 24, ease: "easeOut" }}
         >
           <img
-            src="/images/la_joie_columns_4k.png"
+            src="/images/la_joie_columns_4k.webp"
             alt=""
             className="w-full h-full object-cover object-center"
           />
@@ -232,7 +232,7 @@ export default function Imperiale({ template }: { template: Template }) {
           className="relative max-w-md mx-auto rounded-2xl overflow-hidden shadow-2xl p-3 md:p-4"
         >
           {/* cadre décoratif branches dorées (visible en bordure) */}
-          <img src="/images/gold_branches_4k.png" alt="" className="absolute inset-0 w-full h-full object-cover" />
+          <img src="/images/gold_branches_4k.webp" alt="" className="absolute inset-0 w-full h-full object-cover" />
           {/* panneau crème plat pour la lisibilité, quelle que soit la longueur du texte */}
           <div className="relative rounded-xl flex flex-col items-center justify-center px-8 md:px-12 py-14 md:py-16 text-center" style={{ backgroundColor: "rgba(249,244,233,0.95)" }}>
             <Crown size={24} className="mx-auto mb-4" style={{ color: WINE }} />
@@ -311,7 +311,7 @@ export default function Imperiale({ template }: { template: Template }) {
       {/* ═══════ LIEU ═══════ */}
       <section className="relative py-32 px-6 z-[2] text-center overflow-hidden">
         <div className="absolute inset-0">
-          <img src="/images/la_joie_columns_gate_4k.png" alt="" className="w-full h-full object-cover object-center" />
+          <img src="/images/la_joie_columns_gate_4k.webp" alt="" className="w-full h-full object-cover object-center" />
           <div className="absolute inset-0" style={{ background: `linear-gradient(180deg, ${DARK} 0%, rgba(12,5,7,0.45) 25%, rgba(12,5,7,0.55) 75%, ${DARK} 100%)` }} />
         </div>
         <motion.div initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.5 }} transition={{ duration: 0.8 }} className="relative">
@@ -335,7 +335,7 @@ export default function Imperiale({ template }: { template: Template }) {
       <section className="relative py-28 px-6 z-[2] text-center">
         <div className="max-w-md mx-auto">
           <div className="w-20 h-20 mx-auto mb-6 rounded-full overflow-hidden shadow-2xl" style={{ boxShadow: `0 8px 30px rgba(0,0,0,0.6), 0 0 0 1px ${GOLD}33` }}>
-            <img src="/images/rose_wax_seal_4k.png" alt="" className="w-full h-full object-cover" />
+            <img src="/images/rose_wax_seal_4k.webp" alt="" className="w-full h-full object-cover" />
           </div>
           <h2 className="font-script text-5xl mb-3" style={goldText}>Confirmez votre présence</h2>
           <GoldRule />

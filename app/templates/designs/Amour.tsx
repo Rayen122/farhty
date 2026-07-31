@@ -217,7 +217,7 @@ export default function Amour({ template }: AmourProps) {
                 {/* 4K Gold Foliage Branches Image Layer (Left Side) */}
                 <div className="absolute inset-0 overflow-hidden pointer-events-none">
                   <img
-                    src="/images/gold_branches_4k.png"
+                    src="/images/gold_branches_4k.webp"
                     alt="Feuillage d'or 4K"
                     className="w-[200%] h-full object-cover object-left opacity-90 filter drop-shadow-sm"
                   />
@@ -243,7 +243,7 @@ export default function Amour({ template }: AmourProps) {
                 {/* 4K Gold Foliage Branches Image Layer (Right Side) */}
                 <div className="absolute inset-0 overflow-hidden pointer-events-none">
                   <img
-                    src="/images/gold_branches_4k.png"
+                    src="/images/gold_branches_4k.webp"
                     alt="Feuillage d'or 4K"
                     className="w-[200%] h-full object-cover object-right opacity-90 filter drop-shadow-sm"
                   />
@@ -283,7 +283,7 @@ export default function Amour({ template }: AmourProps) {
                   className="relative w-24 h-24 sm:w-26 sm:h-26 rounded-full flex items-center justify-center shadow-[0_15px_40px_rgba(70,10,18,0.6)]"
                 >
                   <img
-                    src="/images/rose_wax_seal_4k.png"
+                    src="/images/rose_wax_seal_4k.webp"
                     alt="Sceau de cire 4K Rose Rouge"
                     className="w-full h-full object-cover rounded-full filter drop-shadow-2xl"
                   />
