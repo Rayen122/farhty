@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, MessageCircle, Phone, Sparkles } from "lucide-react";
+import { PHONE_URL, WHATSAPP_URL } from "../lib/contact";
 
 export default function FloatingCTA() {
   const [isVisible, setIsVisible] = useState(false);
@@ -37,12 +38,20 @@ export default function FloatingCTA() {
               </div>
               <p className="text-sm text-[var(--color-muted)] font-semibold">فريقنا جاهز لتصميم دعوة فرحك في أقل من 24 ساعة.</p>
               
-              <button className="w-full py-3.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-600 border border-emerald-200 rounded-2xl text-sm font-bold flex items-center justify-center gap-2 transition-all">
+              <a
+                href={WHATSAPP_URL}
+                target="_blank"
+                rel="noreferrer"
+                className="w-full py-3.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-600 border border-emerald-200 rounded-2xl text-sm font-bold flex items-center justify-center gap-2 transition-all cursor-pointer"
+              >
                 <MessageCircle size={18} /> واتساب
-              </button>
-              <button className="w-full py-3.5 bg-white border border-[var(--color-line)] hover:border-[var(--color-coral)] text-[var(--color-ink)] rounded-2xl text-sm font-bold flex items-center justify-center gap-2 transition-all shadow-sm hover:shadow-md">
+              </a>
+              <a
+                href={PHONE_URL}
+                className="w-full py-3.5 bg-white border border-[var(--color-line)] hover:border-[var(--color-coral)] text-[var(--color-ink)] rounded-2xl text-sm font-bold flex items-center justify-center gap-2 transition-all shadow-sm hover:shadow-md cursor-pointer"
+              >
                 <Phone size={18} /> مكالمة هاتفية
-              </button>
+              </a>
             </div>
           )}
 
