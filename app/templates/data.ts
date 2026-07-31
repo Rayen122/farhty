@@ -87,7 +87,7 @@ export const templates: Template[] = [
       photos: ["1", "2"],
     },
     style: "da3wa-palais-or",
-    video: "/videos/a_Cinematic_8k_video,_.mov",
+    video: "/videos/palais-or.mp4",
     image: "/images/golden_palace.png"
   },
   {

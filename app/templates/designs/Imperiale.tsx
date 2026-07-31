@@ -136,7 +136,7 @@ export default function Imperiale({ template }: { template: Template }) {
             className="fixed inset-0 z-[60] flex items-center justify-center overflow-hidden cursor-pointer bg-black"
           >
             <video
-              src="/videos/rd.mov"
+              src="/videos/rd.mp4"
               className="w-full h-full object-cover scale-105"
               playsInline
               muted
