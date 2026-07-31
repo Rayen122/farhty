@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { Diamond, ArrowLeft, Play, Crown } from "lucide-react";
@@ -9,6 +9,8 @@ import { templates as allTemplates, Template } from "../templates/data";
 export default function Templates() {
   const router = useRouter();
   const [activeCategory, setActiveCategory] = useState("all");
+  const trackRef = useRef<HTMLDivElement>(null);
+  const [activeSlide, setActiveSlide] = useState(0);
 
   const categories = [
     { id: "all", label: "المجموعة الكاملة" },
@@ -28,6 +30,38 @@ export default function Templates() {
 
   const openDemo = (slug: string) => {
     router.push(`/templates/${slug}`);
+  };
+
+  /* Repart à la première carte : au montage et à chaque changement de catégorie.
+     Le rAF est nécessaire car une arrivée sur l'ancre #templates fait défiler la
+     piste jusqu'au bout avant que la mise en page soit stabilisée ; une fois
+     repositionnée, elle ne bouge plus. */
+  useEffect(() => {
+    const frame = requestAnimationFrame(() => {
+      trackRef.current?.scrollTo({ left: 0, behavior: "auto" });
+      setActiveSlide(0);
+    });
+    return () => cancelAnimationFrame(frame);
+  }, [activeCategory]);
+
+  /* En RTL, scrollLeft est négatif sous Chrome : on raisonne en valeur absolue. */
+  const handleTrackScroll = () => {
+    const track = trackRef.current;
+    if (!track) return;
+    const card = track.firstElementChild as HTMLElement | null;
+    if (!card) return;
+    const step = card.offsetWidth + 16; /* largeur carte + gap-4 */
+    setActiveSlide(Math.round(Math.abs(track.scrollLeft) / step));
+  };
+
+  const goToSlide = (index: number) => {
+    const track = trackRef.current;
+    if (!track) return;
+    const card = track.firstElementChild as HTMLElement | null;
+    if (!card) return;
+    const step = card.offsetWidth + 16;
+    const rtl = getComputedStyle(track).direction === "rtl";
+    track.scrollTo({ left: (rtl ? -1 : 1) * step * index, behavior: "smooth" });
   };
 
   return (
@@ -71,12 +105,41 @@ export default function Templates() {
           ))}
         </div>
 
-        {/* Masonry/Bento Grid of Templates */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+        {/* Mobile : carrousel horizontal à accroche — Desktop : grille */}
+        <div
+          ref={trackRef}
+          onScroll={handleTrackScroll}
+          className="no-scrollbar -mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto overscroll-x-contain px-4 pb-2
+                     md:mx-0 md:grid md:grid-cols-2 md:gap-6 md:overflow-visible md:px-0 lg:grid-cols-3 lg:gap-8"
+        >
           {filteredTemplates.map((item) => (
-            <TemplateCard key={item.id} item={item} onSelect={openDemo} />
+            <div
+              key={item.id}
+              className="w-[82%] shrink-0 snap-center md:w-auto md:shrink"
+            >
+              <TemplateCard item={item} onSelect={openDemo} />
+            </div>
           ))}
         </div>
+
+        {/* Pagination : mobile uniquement */}
+        {filteredTemplates.length > 1 && (
+          <div className="mt-6 flex items-center justify-center gap-2 md:hidden">
+            {filteredTemplates.map((item, i) => (
+              <button
+                key={item.id}
+                onClick={() => goToSlide(i)}
+                aria-label={`الانتقال إلى التصميم ${i + 1}`}
+                aria-current={i === activeSlide}
+                className={`h-2 rounded-full transition-all ${
+                  i === activeSlide
+                    ? "w-6 bg-[var(--color-coral)]"
+                    : "w-2 bg-[var(--color-line)]"
+                }`}
+              />
+            ))}
+          </div>
+        )}
       </div>
     </section>
   );

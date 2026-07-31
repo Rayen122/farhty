@@ -853,6 +853,15 @@ nextjs-portal,
   display: none !important;
 }
 
+/* Carrousel mobile : masque la barre de défilement sans bloquer le geste */
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
 /* === Anti-copy: block text/image selection & drag site-wide === */
 html,
 body {
