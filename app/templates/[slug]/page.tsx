@@ -22,7 +22,10 @@ import LaJoie from "../designs/LaJoie";
 import Jasmin from "../designs/Jasmin";
 import Tunisian from "../designs/Tunisian";
 import Da3waTemplates from "../designs/Da3waTemplates";
+import MoustacheTunisie from "../designs/MoustacheTunisie";
 import DeviceFrame from "../../components/DeviceFrame";
+import MusicPlayerWidget from "../../components/MusicPlayerWidget";
+import { useInvitationStore, subscribeToDraftAcrossFrames } from "../../lib/invitationStore";
 
 export default function TemplateDemoPageEntry() {
   return (
@@ -36,7 +39,21 @@ function TemplateDemoPage() {
   return <TemplateContent />;
 }
 
-function TemplateContent() {
+/**
+ * Invitation réellement enregistrée, affichée sur /i/<id>.
+ * On réutilise tout le rendu ci-dessous — les 24 designs — au lieu de le dupliquer.
+ */
+export function SavedInvitationView({ slug, saved }: { slug: string; saved: SavedInvitation }) {
+  return (
+    <Suspense fallback={null}>
+      <TemplateContent slugProp={slug} saved={saved} />
+    </Suspense>
+  );
+}
+
+type SavedInvitation = { draft: Template["previewText"]; geo?: Template["geo"]; layout?: Template["layout"] };
+
+function TemplateContent({ slugProp, saved }: { slugProp?: string; saved?: SavedInvitation } = {}) {
   const params = useParams();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -53,7 +70,7 @@ function TemplateContent() {
   }, []);
 
   const isEmbed = searchParams?.get("embed") === "1" || inIframe;
-  const slug = params?.slug as string;
+  const slug = slugProp ?? (params?.slug as string);
   const [template, setTemplate] = useState<Template | null>(null);
   const [countdown, setCountdown] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
   const [rsvpSubmitted, setRsvpSubmitted] = useState(false);
@@ -63,10 +80,43 @@ function TemplateContent() {
 
   const isLellaBeya = slug === "lella-beya";
 
+  /* Mode brouillon : l'éditeur affiche cette page dans une iframe avec ?draft=1 */
+  const isDraft = searchParams?.get("draft") === "1";
+  const storedDraft = useInvitationStore((s) => s.draft);
+  const storedSlug = useInvitationStore((s) => s.slug);
+  const storedGeo = useInvitationStore((s) => s.geo);
+  const storedLayout = useInvitationStore((s) => s.layout);
+
+  useEffect(() => {
+    if (!isDraft) return;
+    useInvitationStore.persist.rehydrate();
+    return subscribeToDraftAcrossFrames();
+  }, [isDraft]);
+
   useEffect(() => {
     const t = getTemplateBySlug(slug);
     if (t) setTemplate(t);
   }, [slug]);
+
+  /* On remplace le contenu de démo, soit par l'invitation enregistrée (/i/<id>),
+     soit par le brouillon de l'éditeur. Tous les designs en profitent. */
+  const effectiveTemplate: Template | null = !template
+    ? null
+    : saved
+      ? {
+          ...template,
+          previewText: { ...template.previewText, ...saved.draft },
+          geo: saved.geo ?? template.geo,
+          layout: saved.layout ?? template.layout,
+        }
+      : isDraft && storedDraft && storedSlug === slug
+        ? {
+            ...template,
+            previewText: { ...template.previewText, ...storedDraft },
+            geo: storedGeo ?? template.geo,
+            layout: storedLayout ?? template.layout,
+          }
+        : template;
 
   useEffect(() => {
     if (!template) return;
@@ -123,6 +173,9 @@ function TemplateContent() {
   const petalPink = "#E8B4B8";
 
   const renderContent = () => {
+    // En mode brouillon, tout le rendu ci-dessous lit le contenu saisi dans l'éditeur
+    const template = effectiveTemplate!;
+
     // Use lella beya design
     if (isLellaBeya) {
       return (
@@ -418,22 +471,40 @@ function TemplateContent() {
     }
 
     // Dispatch to dedicated design components
-    if (template.style.startsWith("da3wa")) return <Da3waTemplates template={template} />;
+    if (template.style.startsWith("da3wa")) return <Da3waTemplates template={template} editable={isDraft} />;
     if (template.style === "la-joie") return <LaJoie template={template} />;
     if (template.style === "amour") return <Amour template={template} />;
     if (template.style === "imperiale") return <Imperiale template={template} />;
     if (template.style === "jardin") return <JardinVintage template={template} />;
     if (template.style === "jasmin") return <Jasmin template={template} />;
+    if (template.style === "moustache") return <MoustacheTunisie />;
     return <Tunisian template={template} />;
   };
 
   const content = renderContent();
 
-  // Inside iframe embed mode, return raw content directly
-  if (isEmbed) {
-    return content;
+  const musicWidget = (
+    <MusicPlayerWidget
+      musicUrl={effectiveTemplate?.previewText.musicUrl}
+      musicTitle={effectiveTemplate?.previewText.musicTitle}
+    />
+  );
+
+  // En iframe, ou pour une invitation réelle envoyée aux invités : plein écran, sans maquette
+  if (isEmbed || saved) {
+    return (
+      <>
+        {content}
+        {musicWidget}
+      </>
+    );
   }
 
   // Outside iframe, wrap in DeviceFrame (mobile mockup by default)
-  return <DeviceFrame desktopNode={content} />;
+  return (
+    <>
+      <DeviceFrame desktopNode={content} />
+      {musicWidget}
+    </>
+  );
 }

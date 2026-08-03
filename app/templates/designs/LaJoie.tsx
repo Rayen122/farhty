@@ -20,6 +20,7 @@ import {
   Crown,
 } from "lucide-react";
 import type { Template } from "../data";
+import PhotoGallery3D from "../../components/PhotoGallery3D";
 
 interface LaJoieProps {
   template: Template;
@@ -678,6 +679,11 @@ export default function LaJoie({ template }: LaJoieProps) {
           </div>
         </div>
       </section>
+
+      {/* ── GALERIE PHOTOS DES MARIÉS 3D 360 ── */}
+      {t.photos && t.photos.length > 0 && (
+        <PhotoGallery3D photos={t.photos} goldColor="#C5A059" textColor="#1C2D42" />
+      )}
 
       {/* ── FORMULAIRE RSVP ── */}
       <section className="py-24 px-6 max-w-xl mx-auto text-center">

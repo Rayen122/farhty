@@ -146,12 +146,14 @@ export default function Templates() {
 }
 
 function TemplateCard({ item, onSelect }: { item: Template; onSelect: (slug: string) => void }) {
+  const router = useRouter();
+
   return (
     <motion.div
       whileHover={{ y: -8, scale: 1.015 }}
       transition={{ duration: 0.3, ease: "easeOut" }}
-      className="group cursor-pointer relative rounded-[28px] overflow-hidden bg-[var(--color-ink)] border border-[var(--color-line)] hover:border-[var(--color-coral)] shadow-md hover:shadow-2xl transition-all h-[420px] flex flex-col justify-end"
-      onClick={() => onSelect(item.slug)}
+      className="group cursor-pointer relative rounded-[28px] overflow-hidden bg-[var(--color-ink)] border border-[var(--color-line)] hover:border-[var(--color-coral)] shadow-md hover:shadow-2xl transition-all h-[440px] flex flex-col justify-end"
+      onClick={() => router.push(`/editor?slug=${item.slug}`)}
     >
       {/* Cover Image */}
       <img
@@ -164,16 +166,18 @@ function TemplateCard({ item, onSelect }: { item: Template; onSelect: (slug: str
       />
 
       {/* Dark gradient overlay for consistent text contrast */}
-      <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-black/10 transition-opacity duration-300" />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-black/10 transition-opacity duration-300" />
 
-      {/* Center Play Button (Reveals on Hover) */}
-      <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 scale-90 group-hover:scale-100 z-10">
+      {/* Center Play Button for Preview */}
+      <div
+        className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 scale-90 group-hover:scale-100 z-10 pointer-events-none"
+      >
         <div className="w-16 h-16 rounded-full bg-white/90 backdrop-blur-md flex items-center justify-center text-[var(--color-coral)] shadow-2xl">
           <Play className="w-6 h-6 fill-[var(--color-coral)] ml-1" />
         </div>
       </div>
 
-      {/* Content Details */}
+      {/* Content Details & Actions */}
       <div className="relative z-20 p-6 flex flex-col justify-end">
         <div className="mb-2">
           <span className="inline-block px-3 py-1 rounded-full bg-white/15 backdrop-blur-md text-[var(--color-gold-light)] text-[11px] font-bold mb-2">
@@ -187,12 +191,28 @@ function TemplateCard({ item, onSelect }: { item: Template; onSelect: (slug: str
           </p>
         </div>
         
-        <div className="mt-3 pt-3 border-t border-white/20 flex items-center justify-between text-xs font-bold text-white/90 group-hover:text-white transition-colors">
-          <span className="flex items-center gap-1.5">
-            <Diamond className="w-3.5 h-3.5 text-[var(--color-gold)]" />
-            تجربة الأنميشن
-          </span>
-          <ArrowLeft className="w-4 h-4 text-white group-hover:-translate-x-1.5 transition-transform duration-300" />
+        <div className="mt-3 pt-3 border-t border-white/20 grid grid-cols-2 gap-2">
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              router.push(`/editor?slug=${item.slug}`);
+            }}
+            className="w-full py-2.5 px-3 bg-[var(--color-coral)] hover:bg-[#8B0A1A] text-white rounded-xl font-extrabold text-xs flex items-center justify-center gap-1.5 shadow-md hover:shadow-lg transition-all cursor-pointer"
+          >
+            <Crown className="w-3.5 h-3.5" />
+            <span>تعديل الدعوة</span>
+          </button>
+
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              onSelect(item.slug);
+            }}
+            className="w-full py-2.5 px-3 bg-white/20 hover:bg-white/30 backdrop-blur-md text-white rounded-xl font-bold text-xs flex items-center justify-center gap-1.5 border border-white/30 transition-all cursor-pointer"
+          >
+            <Play className="w-3.5 h-3.5 fill-white" />
+            <span>معاينة</span>
+          </button>
         </div>
       </div>
     </motion.div>

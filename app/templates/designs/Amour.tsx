@@ -19,6 +19,7 @@ import {
   Navigation,
 } from "lucide-react";
 import type { Template } from "../data";
+import PhotoGallery3D from "../../components/PhotoGallery3D";
 
 interface AmourProps {
   template: Template;
@@ -169,7 +170,7 @@ export default function Amour({ template }: AmourProps) {
 
                   {/* Quranic Ayat Calligraphy Text */}
                   <p className="font-serif text-lg sm:text-xl text-[#871822] leading-relaxed font-bold tracking-wide">
-                    ﴿ وَمِنْ آيَاتِهِ أَنْ خَلَقَ لَكُم مِّنْ أَنفُسِكُمْ أَزْوَاجًا لِّتَسْكُنُوا إِلَيْهَا وَجَعَلَ بَيْنَكُم مَّوَدَّةً وَرَحْمَةً ﴾
+                    {t.quranVerse || "﴿ وَمِنْ آيَاتِهِ أَنْ خَلَقَ لَكُم مِّنْ أَنفُسِكُمْ أَزْوَاجًا لِّتَسْكُنُوا إِلَيْهَا وَجَعَلَ بَيْنَكُم مَّوَدَّةً وَرَحْمَةً ﴾"}
                   </p>
 
                   <p className="font-serif italic text-[11px] sm:text-xs text-[#7A6038] mt-2 max-w-xs mx-auto leading-normal">
@@ -384,7 +385,7 @@ export default function Amour({ template }: AmourProps) {
             <div className="w-16 h-px bg-gradient-to-r from-transparent via-[#C59B58] to-transparent mx-auto mb-4" />
 
             <h2 className="font-serif text-2xl sm:text-3xl text-[#871822] leading-relaxed font-bold tracking-wide mb-3">
-              ﴿ وَمِنْ آيَاتِهِ أَنْ خَلَقَ لَكُم مِّنْ أَنفُسِكُمْ أَزْوَاجًا لِّتَسْكُنُوا إِلَيْهَا وَجَعَلَ بَيْنَكُم مَّوَدَّةً وَرَحْمَةً ﴾
+              {t.quranVerse || "﴿ وَمِنْ آيَاتِهِ أَنْ خَلَقَ لَكُم مِّنْ أَنفُسِكُمْ أَزْوَاجًا لِّتَسْكُنُوا إِلَيْهَا وَجَعَلَ بَيْنَكُم مَّوَدَّةً وَرَحْمَةً ﴾"}
             </h2>
 
             <p className="font-serif italic text-sm sm:text-base text-[#684C1C] max-w-xl mx-auto leading-relaxed">
@@ -528,6 +529,11 @@ export default function Amour({ template }: AmourProps) {
           ))}
         </div>
       </section>
+
+      {/* ── GALERIE PHOTOS DES MARIÉS 3D 360 ── */}
+      {t.photos && t.photos.length > 0 && (
+        <PhotoGallery3D photos={t.photos} goldColor="#C59B58" textColor="#684C1C" />
+      )}
 
       {/* ── LIEU & ITINÉRAIRE ── */}
       <section className="py-24 px-6 bg-[#FDF5E8] border-t border-[#E6D0B3]">

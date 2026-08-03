@@ -2,7 +2,7 @@
 
 import { useLayoutEffect, useRef, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { Smartphone, Tablet, ArrowLeft } from "lucide-react";
+import { Smartphone, Tablet, ArrowLeft, Sparkles } from "lucide-react";
 
 type Device = "mobile" | "tablet";
 
@@ -111,9 +111,11 @@ export default function DeviceFrame({ desktopNode }: { desktopNode: React.ReactN
     return () => window.removeEventListener("resize", compute);
   }, [device]);
 
+  const templateSlug = pathname.replace("/templates/", "");
+
   return (
     <>
-      {/* Top Navigation Bar: Back button & Phone / Tablet switcher only */}
+      {/* Top Navigation Bar: Back button & Phone / Tablet switcher & Edit in Editor button */}
       <div
         className="fixed top-4 left-1/2 -translate-x-1/2 z-[200] bg-[#1C050B]/90 backdrop-blur-md border border-[#D4AF37]/40 rounded-full px-3 py-1.5 flex items-center gap-2 shadow-2xl"
         dir="rtl"
@@ -125,6 +127,19 @@ export default function DeviceFrame({ desktopNode }: { desktopNode: React.ReactN
         >
           <ArrowLeft size={15} />
           <span>الرجوع للقوالب</span>
+        </button>
+
+        <span className="w-px h-5 bg-[#D4AF37]/30 mx-1" aria-hidden />
+
+        <button
+          onClick={() => {
+            router.push(templateSlug && templateSlug !== pathname ? `/editor?slug=${templateSlug}` : "/editor");
+          }}
+          aria-label="تعديل في المحرر"
+          className="px-4 py-1.5 rounded-full flex items-center gap-1.5 text-xs font-bold text-white bg-gradient-to-r from-[var(--color-coral)] to-[#8B0A1A] hover:opacity-90 border border-[#D4AF37]/50 shadow-md transition-all cursor-pointer"
+        >
+          <Sparkles size={14} />
+          <span>تعديل في المحرر</span>
         </button>
 
         <span className="w-px h-5 bg-[#D4AF37]/30 mx-1" aria-hidden />

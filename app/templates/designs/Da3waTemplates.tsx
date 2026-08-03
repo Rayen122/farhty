@@ -1,8 +1,14 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { Template } from "../data";
+import { motion, AnimatePresence, useAnimationControls } from "framer-motion";
+import { Template, mapsLinkFor, mapsEmbedFor } from "../data";
+import {
+  useInvitationStore,
+  DEFAULT_CARD_LAYOUT,
+  type BlockPosition,
+} from "../../lib/invitationStore";
+import PhotoGallery3D from "../../components/PhotoGallery3D";
 import {
   Calendar,
   Clock,
@@ -19,6 +25,66 @@ import {
 interface Props {
   template: Template;
   customData?: any;
+  /** Mode éditeur : les blocs de la carte deviennent déplaçables */
+  editable?: boolean;
+}
+
+/**
+ * Bloc de texte posé sur la carte, repositionnable à la souris/au doigt.
+ *
+ * La position est stockée en % du centre de la carte, donc indépendante de la
+ * taille de l'écran. framer-motion applique un décalage `x/y` pendant le glissement :
+ * à la fin on convertit ce décalage en %, puis on remet le décalage à zéro pour
+ * éviter qu'il ne s'additionne à la nouvelle position.
+ */
+function CardBlock({
+  id,
+  pos,
+  editable,
+  cardRef,
+  onMove,
+  className,
+  style,
+  children,
+}: {
+  id: string;
+  pos: BlockPosition;
+  editable: boolean;
+  cardRef: React.RefObject<HTMLDivElement | null>;
+  onMove: (id: string, pos: BlockPosition) => void;
+  className?: string;
+  style?: React.CSSProperties;
+  children: React.ReactNode;
+}) {
+  const ref = useRef<HTMLDivElement>(null);
+  const controls = useAnimationControls();
+
+  return (
+    <motion.div
+      ref={ref}
+      drag={editable}
+      dragMomentum={false}
+      dragElastic={0}
+      dragConstraints={cardRef}
+      animate={controls}
+      onDragEnd={() => {
+        const card = cardRef.current?.getBoundingClientRect();
+        const me = ref.current?.getBoundingClientRect();
+        if (!card || !me) return;
+        onMove(id, {
+          x: +(((me.left + me.width / 2 - card.left) / card.width) * 100).toFixed(2),
+          y: +(((me.top + me.height / 2 - card.top) / card.height) * 100).toFixed(2),
+        });
+        controls.set({ x: 0, y: 0 });
+      }}
+      className={`absolute -translate-x-1/2 -translate-y-1/2 ${
+        editable ? "cursor-grab active:cursor-grabbing rounded-lg ring-1 ring-dashed ring-black/25 hover:ring-black/50" : ""
+      } ${className ?? ""}`}
+      style={{ left: `${pos.x}%`, top: `${pos.y}%`, ...style }}
+    >
+      {children}
+    </motion.div>
+  );
 }
 
 const templateVideoMap: Record<string, string> = {
@@ -428,7 +494,14 @@ function OrnamentDivider({ color }: { color: string }) {
   );
 }
 
-export default function Da3waTemplates({ template, customData }: Props) {
+export default function Da3waTemplates({ template, customData, editable }: Props) {
+  /* Carte de référence pour convertir un glissement en pourcentage */
+  const cardRef = useRef<HTMLDivElement>(null);
+  const setBlockPosition = useInvitationStore((s) => s.setBlockPosition);
+  /* Positions : celles enregistrées sur l'invitation, sinon les valeurs par défaut */
+  const L = { ...DEFAULT_CARD_LAYOUT, ...(template.layout ?? {}) };
+  const moveBlock = (id: string, pos: BlockPosition) => setBlockPosition(id, pos);
+
   const [isOpen, setIsOpen] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [knocks, setKnocks] = useState(0);
@@ -541,7 +614,7 @@ export default function Da3waTemplates({ template, customData }: Props) {
               /* La vidéo finit sur une carte vierge : on cale une boîte 9:16 dessus
                  pour y inscrire le texte exactement dans la carte. */
               <div className="absolute inset-0 flex items-center justify-center">
-                <div className="relative" style={CARD_BOX_STYLE}>
+                <div ref={cardRef} className="relative" style={CARD_BOX_STYLE}>
                   <video
                     ref={videoRef}
                     autoPlay
@@ -566,59 +639,40 @@ export default function Da3waTemplates({ template, customData }: Props) {
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         transition={{ duration: 1.1, ease: "easeOut" }}
-                        className="absolute inset-0 flex flex-col items-center justify-center text-center"
-                        style={{ paddingInline: cardInk.padX, paddingBlock: cardInk.padY }}
+                        className="absolute inset-0 text-center"
                       >
-                        <motion.span
-                          initial={{ opacity: 0, y: 10 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          transition={{ delay: 0.15, duration: 0.8 }}
-                          className="text-[10px] sm:text-xs tracking-[0.45em] mb-4"
-                          style={{ color: cardInk.muted }}
-                        >
+                        <CardBlock id="label" pos={L.label} editable={!!editable} cardRef={cardRef} onMove={moveBlock}
+                          className="text-[10px] sm:text-xs tracking-[0.45em] whitespace-nowrap px-2 py-1"
+                          style={{ color: cardInk.muted }}>
                           دعوة زفاف
-                        </motion.span>
+                        </CardBlock>
 
-                        <motion.h1
-                          initial={{ opacity: 0, y: 14 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          transition={{ delay: 0.35, duration: 0.9 }}
-                          className="text-4xl sm:text-5xl font-extrabold leading-[1.35]"
-                          style={{ fontFamily: "var(--font-display)", color: cardInk.ink }}
-                        >
+                        <CardBlock id="names" pos={L.names} editable={!!editable} cardRef={cardRef} onMove={moveBlock}
+                          className="text-4xl sm:text-5xl font-extrabold leading-[1.35] px-3 py-1"
+                          style={{ fontFamily: "var(--font-display)", color: cardInk.ink }}>
                           {data.bride}
                           <span className="block my-2 text-2xl sm:text-3xl font-normal" style={{ color: cardInk.gold }}>
                             &amp;
                           </span>
                           {data.groom}
-                        </motion.h1>
+                        </CardBlock>
 
-                        <motion.div
-                          initial={{ opacity: 0, scaleX: 0 }}
-                          animate={{ opacity: 1, scaleX: 1 }}
-                          transition={{ delay: 0.75, duration: 0.9 }}
-                          className="w-24 h-px my-6"
-                          style={{ backgroundColor: cardInk.gold }}
-                        />
+                        <CardBlock id="rule" pos={L.rule} editable={!!editable} cardRef={cardRef} onMove={moveBlock}
+                          className="py-2 px-1">
+                          <span className="block w-24 h-px" style={{ backgroundColor: cardInk.gold }} />
+                        </CardBlock>
 
-                        <motion.p
-                          initial={{ opacity: 0, y: 10 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          transition={{ delay: 0.95, duration: 0.8 }}
-                          className="text-sm sm:text-base font-bold"
-                          style={{ color: cardInk.ink }}
-                        >
+                        <CardBlock id="date" pos={L.date} editable={!!editable} cardRef={cardRef} onMove={moveBlock}
+                          className="text-sm sm:text-base font-bold whitespace-nowrap px-2 py-1"
+                          style={{ color: cardInk.ink }}>
                           {data.date}
-                        </motion.p>
-                        <motion.p
-                          initial={{ opacity: 0, y: 10 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          transition={{ delay: 1.1, duration: 0.8 }}
-                          className="text-xs sm:text-sm mt-1.5"
-                          style={{ color: cardInk.muted }}
-                        >
+                        </CardBlock>
+
+                        <CardBlock id="venue" pos={L.venue} editable={!!editable} cardRef={cardRef} onMove={moveBlock}
+                          className="text-xs sm:text-sm whitespace-nowrap px-2 py-1"
+                          style={{ color: cardInk.muted }}>
                           {data.lieu} · {data.city}
-                        </motion.p>
+                        </CardBlock>
 
                         {/* invite à faire défiler vers le reste de la dépliante */}
                         <motion.button
@@ -814,28 +868,30 @@ export default function Da3waTemplates({ template, customData }: Props) {
           )}
 
           {/* 2. QURANIC VERSE */}
-          <section className="w-full max-w-2xl px-4 py-8 text-center">
-            <div
-              className="rounded-3xl p-8 backdrop-blur-xl shadow-xl space-y-4 border"
-              style={{ backgroundColor: theme.cardBg, borderColor: theme.cardBorder }}
-            >
+          {!data.hideQuran && (
+            <section className="w-full max-w-2xl px-4 py-8 text-center">
               <div
-                className="w-10 h-10 rounded-full mx-auto flex items-center justify-center border"
-                style={{ backgroundColor: theme.badgeBg, borderColor: theme.cardBorder }}
+                className="rounded-3xl p-8 backdrop-blur-xl shadow-xl space-y-4 border"
+                style={{ backgroundColor: theme.cardBg, borderColor: theme.cardBorder }}
               >
-                <BookOpen className="w-5 h-5" style={{ color: theme.goldColor }} />
+                <div
+                  className="w-10 h-10 rounded-full mx-auto flex items-center justify-center border"
+                  style={{ backgroundColor: theme.badgeBg, borderColor: theme.cardBorder }}
+                >
+                  <BookOpen className="w-5 h-5" style={{ color: theme.goldColor }} />
+                </div>
+                <p
+                  className="text-base sm:text-lg font-serif leading-loose"
+                  style={{ fontFamily: "var(--font-display)", color: theme.textColor }}
+                >
+                  {data.quranVerse || "« وَمِنْ آيَاتِهِ أَنْ خَلَقَ لَكُم مِّنْ أَنفُسِكُمْ أَزْوَاجًا لِّتَسْكُنُوا إِلَيْهَا وَجَعَلَ بَيْنَكُم مَّوَدَّةً وَرَحْمَةً »"}
+                </p>
+                <span className="text-xs font-bold block" style={{ color: theme.goldColor }}>
+                  صدق الله العظيم
+                </span>
               </div>
-              <p
-                className="text-base sm:text-lg font-serif leading-loose"
-                style={{ fontFamily: "var(--font-display)", color: theme.textColor }}
-              >
-                « وَمِنْ آيَاتِهِ أَنْ خَلَقَ لَكُم مِّنْ أَنفُسِكُمْ أَزْوَاجًا لِّتَسْكُنُوا إِلَيْهَا وَجَعَلَ بَيْنَكُم مَّوَدَّةً وَرَحْمَةً »
-              </p>
-              <span className="text-xs font-bold block" style={{ color: theme.goldColor }}>
-                صدق الله العظيم
-              </span>
-            </div>
-          </section>
+            </section>
+          )}
 
           {/* 3. EVENT DETAILS GRID */}
           <section className="w-full max-w-2xl px-4 py-8">
@@ -872,7 +928,7 @@ export default function Da3waTemplates({ template, customData }: Props) {
                   {data.lieu} — {data.city}
                 </span>
                 <a
-                  href={`https://maps.google.com/?q=${encodeURIComponent(data.lieu + " " + data.city)}`}
+                  href={mapsLinkFor({ geo: template.geo, previewText: data })}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full font-extrabold text-xs shadow-md hover:scale-105 transition-transform"
@@ -883,7 +939,7 @@ export default function Da3waTemplates({ template, customData }: Props) {
                 <div className="w-full h-48 rounded-2xl overflow-hidden border mt-3 shadow-lg" style={{ borderColor: theme.cardBorder }}>
                   <iframe
                     title="خريطة القاعة"
-                    src={`https://maps.google.com/maps?q=${encodeURIComponent(data.lieu + " " + data.city)}&t=&z=15&ie=UTF8&iwloc=&output=embed`}
+                    src={mapsEmbedFor({ geo: template.geo, previewText: data })}
                     width="100%"
                     height="100%"
                     style={{ border: 0, filter: "contrast(1.05) opacity(0.92)" }}
@@ -930,156 +986,169 @@ export default function Da3waTemplates({ template, customData }: Props) {
             </section>
           )}
 
-          {/* 5. RSVP FORM */}
-          <section className="w-full max-w-2xl px-4 py-8">
-            <div
-              className="backdrop-blur-xl rounded-3xl p-6 sm:p-8 border shadow-2xl space-y-6"
-              style={{ backgroundColor: theme.cardBg, borderColor: theme.cardBorder }}
-            >
-              <div className="text-center space-y-1">
-                <UserCheck className="w-7 h-7 mx-auto" style={{ color: theme.goldColor }} />
-                <h2 className="text-2xl font-bold" style={{ fontFamily: "var(--font-display)", color: theme.goldColor }}>
-                  تأكيد الحضور (RSVP)
-                </h2>
-                <p className="text-xs" style={{ color: theme.subtextColor }}>يسعدنا جداً حضوركم وتشريفكم لنا في هذه الليلة المباركة</p>
-              </div>
+          {/* 4.5. 3D 360 ROTATING PHOTO GALLERY */}
+          {data.photos && data.photos.length > 0 && (
+            <PhotoGallery3D
+              photos={data.photos}
+              goldColor={theme.goldColor}
+              textColor={theme.textColor}
+            />
+          )}
 
-              {submittedRsvp ? (
-                <div className="p-6 rounded-2xl bg-emerald-500/10 border border-emerald-400/30 text-center space-y-2">
-                  <UserCheck className="w-8 h-8 text-emerald-400 mx-auto" />
-                  <h3 className="text-base font-bold text-emerald-300">تم تسجيل تأكيد حضورك بنجاح!</h3>
-                  <p className="text-xs text-gray-300">شكراً لك، ننتظر رؤيتك بشغف في يوم الحفل.</p>
+          {/* 5. RSVP FORM */}
+          {!data.hideRsvp && (
+            <section className="w-full max-w-2xl px-4 py-8">
+              <div
+                className="backdrop-blur-xl rounded-3xl p-6 sm:p-8 border shadow-2xl space-y-6"
+                style={{ backgroundColor: theme.cardBg, borderColor: theme.cardBorder }}
+              >
+                <div className="text-center space-y-1">
+                  <UserCheck className="w-7 h-7 mx-auto" style={{ color: theme.goldColor }} />
+                  <h2 className="text-2xl font-bold" style={{ fontFamily: "var(--font-display)", color: theme.goldColor }}>
+                    تأكيد الحضور (RSVP)
+                  </h2>
+                  <p className="text-xs" style={{ color: theme.subtextColor }}>يسعدنا جداً حضوركم وتشريفكم لنا في هذه الليلة المباركة</p>
                 </div>
-              ) : (
-                <form
-                  onSubmit={(e) => {
-                    e.preventDefault();
-                    if (rsvpAttending !== null && guestName) setSubmittedRsvp(true);
-                  }}
-                  className="space-y-4"
-                >
-                  <div>
-                    <label className="block text-xs font-bold mb-1" style={{ color: theme.subtextColor }}>الاسم الكامل</label>
-                    <input
-                      type="text"
-                      required
-                      placeholder="أدخل اسمك الكريم"
-                      value={guestName}
-                      onChange={(e) => setGuestName(e.target.value)}
-                      className="w-full px-4 py-3 rounded-xl bg-white/5 border text-sm focus:outline-none focus:border-amber-400 transition-colors"
-                      style={{ color: theme.textColor, borderColor: theme.cardBorder }}
-                    />
+
+                {submittedRsvp ? (
+                  <div className="p-6 rounded-2xl bg-emerald-500/10 border border-emerald-400/30 text-center space-y-2">
+                    <UserCheck className="w-8 h-8 text-emerald-400 mx-auto" />
+                    <h3 className="text-base font-bold text-emerald-300">تم تسجيل تأكيد حضورك بنجاح!</h3>
+                    <p className="text-xs text-gray-300">شكراً لك، ننتظر رؤيتك بشغف في يوم الحفل.</p>
                   </div>
-                  <div>
-                    <label className="block text-xs font-bold mb-2" style={{ color: theme.subtextColor }}>هل ستحضر المناسبة؟</label>
-                    <div className="grid grid-cols-2 gap-3">
-                      <button
-                        type="button"
-                        onClick={() => setRsvpAttending(true)}
-                        className={`py-3 rounded-xl font-bold text-xs border cursor-pointer transition-all ${
-                          rsvpAttending === true ? "bg-emerald-600 text-white border-emerald-400 shadow-lg" : "bg-white/5 border-white/20"
-                        }`}
-                        style={{ color: rsvpAttending === true ? "#FFF" : theme.textColor }}
-                      >
-                        نعم، سأحضر ببالغ الشوق
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => setRsvpAttending(false)}
-                        className={`py-3 rounded-xl font-bold text-xs border cursor-pointer transition-all ${
-                          rsvpAttending === false ? "bg-rose-600 text-white border-rose-400 shadow-lg" : "bg-white/5 border-white/20"
-                        }`}
-                        style={{ color: rsvpAttending === false ? "#FFF" : theme.textColor }}
-                      >
-                        أعتذر عن الحضور
-                      </button>
-                    </div>
-                  </div>
-                  {rsvpAttending === true && (
-                    <div>
-                      <label className="block text-xs font-bold mb-1" style={{ color: theme.subtextColor }}>عدد الأشخاص</label>
-                      <select
-                        value={guestCount}
-                        onChange={(e) => setGuestCount(Number(e.target.value))}
-                        className="w-full px-4 py-3 rounded-xl bg-white/5 border text-sm focus:outline-none"
-                        style={{ color: theme.textColor, borderColor: theme.cardBorder }}
-                      >
-                        <option value={1} className="bg-gray-900 text-white">شخص واحد</option>
-                        <option value={2} className="bg-gray-900 text-white">شخصان (2)</option>
-                        <option value={3} className="bg-gray-900 text-white">3 أشخاص</option>
-                        <option value={4} className="bg-gray-900 text-white">4 أشخاص أو أكثر</option>
-                      </select>
-                    </div>
-                  )}
-                  <button
-                    type="submit"
-                    disabled={rsvpAttending === null}
-                    className="w-full py-3.5 rounded-full font-extrabold text-sm shadow-lg disabled:opacity-50 cursor-pointer hover:scale-[1.02] transition-transform"
-                    style={{ backgroundColor: theme.goldColor, color: "#000" }}
+                ) : (
+                  <form
+                    onSubmit={(e) => {
+                      e.preventDefault();
+                      if (rsvpAttending !== null && guestName) setSubmittedRsvp(true);
+                    }}
+                    className="space-y-4"
                   >
-                    إرسال تأكيد الحضور
-                  </button>
-                </form>
-              )}
-            </div>
-          </section>
+                    <div>
+                      <label className="block text-xs font-bold mb-1" style={{ color: theme.subtextColor }}>الاسم الكامل</label>
+                      <input
+                        type="text"
+                        required
+                        placeholder="أدخل اسمك الكريم"
+                        value={guestName}
+                        onChange={(e) => setGuestName(e.target.value)}
+                        className="w-full px-4 py-3 rounded-xl bg-white/5 border text-sm focus:outline-none focus:border-amber-400 transition-colors"
+                        style={{ color: theme.textColor, borderColor: theme.cardBorder }}
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-bold mb-2" style={{ color: theme.subtextColor }}>هل ستحضر المناسبة؟</label>
+                      <div className="grid grid-cols-2 gap-3">
+                        <button
+                          type="button"
+                          onClick={() => setRsvpAttending(true)}
+                          className={`py-3 rounded-xl font-bold text-xs border cursor-pointer transition-all ${
+                            rsvpAttending === true ? "bg-emerald-600 text-white border-emerald-400 shadow-lg" : "bg-white/5 border-white/20"
+                          }`}
+                          style={{ color: rsvpAttending === true ? "#FFF" : theme.textColor }}
+                        >
+                          نعم، سأحضر ببالغ الشوق
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setRsvpAttending(false)}
+                          className={`py-3 rounded-xl font-bold text-xs border cursor-pointer transition-all ${
+                            rsvpAttending === false ? "bg-rose-600 text-white border-rose-400 shadow-lg" : "bg-white/5 border-white/20"
+                          }`}
+                          style={{ color: rsvpAttending === false ? "#FFF" : theme.textColor }}
+                        >
+                          أعتذر عن الحضور
+                        </button>
+                      </div>
+                    </div>
+                    {rsvpAttending === true && (
+                      <div>
+                        <label className="block text-xs font-bold mb-1" style={{ color: theme.subtextColor }}>عدد الأشخاص</label>
+                        <select
+                          value={guestCount}
+                          onChange={(e) => setGuestCount(Number(e.target.value))}
+                          className="w-full px-4 py-3 rounded-xl bg-white/5 border text-sm focus:outline-none"
+                          style={{ color: theme.textColor, borderColor: theme.cardBorder }}
+                        >
+                          <option value={1} className="bg-gray-900 text-white">شخص واحد</option>
+                          <option value={2} className="bg-gray-900 text-white">شخصان (2)</option>
+                          <option value={3} className="bg-gray-900 text-white">3 أشخاص</option>
+                          <option value={4} className="bg-gray-900 text-white">4 أشخاص أو أكثر</option>
+                        </select>
+                      </div>
+                    )}
+                    <button
+                      type="submit"
+                      disabled={rsvpAttending === null}
+                      className="w-full py-3.5 rounded-full font-extrabold text-sm shadow-lg disabled:opacity-50 cursor-pointer hover:scale-[1.02] transition-transform"
+                      style={{ backgroundColor: theme.goldColor, color: "#000" }}
+                    >
+                      إرسال تأكيد الحضور
+                    </button>
+                  </form>
+                )}
+              </div>
+            </section>
+          )}
 
           {/* 6. WISHES WALL */}
-          <section className="w-full max-w-2xl px-4 py-8">
-            <div
-              className="backdrop-blur-xl rounded-3xl p-6 sm:p-8 border shadow-2xl space-y-6"
-              style={{ backgroundColor: theme.cardBg, borderColor: theme.cardBorder }}
-            >
-              <div className="text-center space-y-1">
-                <Heart className="w-7 h-7 mx-auto" style={{ color: theme.accentColor }} />
-                <h2 className="text-2xl font-bold" style={{ fontFamily: "var(--font-display)", color: theme.goldColor }}>
-                  جدار التهاني والتبريكات
-                </h2>
-                <p className="text-xs" style={{ color: theme.subtextColor }}>اترك كلمة طيبة ودعوة صادقة للعروسين</p>
-              </div>
+          {!data.hideWishes && (
+            <section className="w-full max-w-2xl px-4 py-8">
+              <div
+                className="backdrop-blur-xl rounded-3xl p-6 sm:p-8 border shadow-2xl space-y-6"
+                style={{ backgroundColor: theme.cardBg, borderColor: theme.cardBorder }}
+              >
+                <div className="text-center space-y-1">
+                  <Heart className="w-7 h-7 mx-auto" style={{ color: theme.accentColor }} />
+                  <h2 className="text-2xl font-bold" style={{ fontFamily: "var(--font-display)", color: theme.goldColor }}>
+                    جدار التهاني والتبريكات
+                  </h2>
+                  <p className="text-xs" style={{ color: theme.subtextColor }}>اترك كلمة طيبة ودعوة صادقة للعروسين</p>
+                </div>
 
-              <form onSubmit={handleAddWish} className="space-y-3">
-                <input
-                  type="text"
-                  required
-                  placeholder="اسمك الكريـم..."
-                  value={guestName}
-                  onChange={(e) => setGuestName(e.target.value)}
-                  className="w-full px-4 py-2.5 rounded-xl bg-white/5 border text-xs focus:outline-none"
-                  style={{ color: theme.textColor, borderColor: theme.cardBorder }}
-                />
-                <textarea
-                  required
-                  rows={2}
-                  placeholder="اكتب تهنئتك للعروسين هنا..."
-                  value={wishText}
-                  onChange={(e) => setWishText(e.target.value)}
-                  className="w-full px-4 py-2.5 rounded-xl bg-white/5 border text-xs focus:outline-none"
-                  style={{ color: theme.textColor, borderColor: theme.cardBorder }}
-                />
-                <button
-                  type="submit"
-                  className="w-full py-2.5 rounded-xl font-bold text-xs flex items-center justify-center gap-1.5 shadow-md hover:opacity-90 transition-opacity text-white"
-                  style={{ backgroundColor: theme.accentColor }}
-                >
-                  <Send className="w-3.5 h-3.5" />
-                  <span>نشر التهنئة</span>
-                </button>
-              </form>
+                <form onSubmit={handleAddWish} className="space-y-3">
+                  <input
+                    type="text"
+                    required
+                    placeholder="اسمك الكريـم..."
+                    value={guestName}
+                    onChange={(e) => setGuestName(e.target.value)}
+                    className="w-full px-4 py-2.5 rounded-xl bg-white/5 border text-xs focus:outline-none"
+                    style={{ color: theme.textColor, borderColor: theme.cardBorder }}
+                  />
+                  <textarea
+                    required
+                    rows={2}
+                    placeholder="اكتب تهنئتك للعروسين هنا..."
+                    value={wishText}
+                    onChange={(e) => setWishText(e.target.value)}
+                    className="w-full px-4 py-2.5 rounded-xl bg-white/5 border text-xs focus:outline-none"
+                    style={{ color: theme.textColor, borderColor: theme.cardBorder }}
+                  />
+                  <button
+                    type="submit"
+                    className="w-full py-2.5 rounded-xl font-bold text-xs flex items-center justify-center gap-1.5 shadow-md hover:opacity-90 transition-opacity text-white"
+                    style={{ backgroundColor: theme.accentColor }}
+                  >
+                    <Send className="w-3.5 h-3.5" />
+                    <span>نشر التهنئة</span>
+                  </button>
+                </form>
 
-              <div className="space-y-3 pt-2">
-                {wishes.map((w, idx) => (
-                  <div key={idx} className="p-4 rounded-2xl bg-white/5 border space-y-1 text-right" style={{ borderColor: theme.cardBorder }}>
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs font-bold" style={{ color: theme.goldColor }}>{w.name}</span>
-                      <span className="text-[10px]" style={{ color: theme.subtextColor }}>{w.time}</span>
+                <div className="space-y-3 pt-2">
+                  {wishes.map((w, idx) => (
+                    <div key={idx} className="p-4 rounded-2xl bg-white/5 border space-y-1 text-right" style={{ borderColor: theme.cardBorder }}>
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs font-bold" style={{ color: theme.goldColor }}>{w.name}</span>
+                        <span className="text-[10px]" style={{ color: theme.subtextColor }}>{w.time}</span>
+                      </div>
+                      <p className="text-xs leading-relaxed" style={{ color: theme.textColor }}>{w.text}</p>
                     </div>
-                    <p className="text-xs leading-relaxed" style={{ color: theme.textColor }}>{w.text}</p>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
-            </div>
-          </section>
+            </section>
+          )}
         </motion.div>
       )}
     </div>

@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, MessageCircle, Phone, Sparkles } from "lucide-react";
+import Link from "next/link";
 import { PHONE_URL, WHATSAPP_URL } from "../lib/contact";
 
 export default function FloatingCTA() {
@@ -57,16 +58,24 @@ export default function FloatingCTA() {
 
           <div className="bg-white/95 backdrop-blur-lg border-t border-[var(--color-line)] px-4 py-4 shadow-[0_-10px_30px_rgba(0,0,0,0.05)]">
             <div className="flex items-center gap-3">
-              <button
-                onClick={() => setIsExpanded(!isExpanded)}
-                className="flex-1 bg-[var(--color-coral)] text-white py-3.5 rounded-2xl text-sm font-extrabold shadow-[0_0_20px_rgba(182,109,111,0.3)] flex items-center justify-center gap-2"
+              <a
+                href="/#templates"
+                onClick={(e) => {
+                  const el = document.getElementById("templates");
+                  if (el) {
+                    e.preventDefault();
+                    el.scrollIntoView({ behavior: "smooth" });
+                  }
+                }}
+                className="flex-1 bg-[var(--color-coral)] text-white py-3.5 rounded-2xl text-sm font-extrabold shadow-[0_0_20px_rgba(182,109,111,0.3)] flex items-center justify-center gap-2 cursor-pointer"
               >
                 <Sparkles size={16} />
                 اصنع دعوتك الآن
-              </button>
+              </a>
               <button
                 onClick={() => setIsExpanded(!isExpanded)}
-                className="w-14 h-14 bg-white border border-[var(--color-line)] text-[var(--color-coral)] rounded-2xl flex items-center justify-center shadow-md hover:shadow-lg transition-shadow"
+                className="w-14 h-14 bg-white border border-[var(--color-line)] text-[var(--color-coral)] rounded-2xl flex items-center justify-center shadow-md hover:shadow-lg transition-shadow cursor-pointer"
+                aria-label="تواصل معنا"
               >
                 <MessageCircle size={22} />
               </button>

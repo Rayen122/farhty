@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { CheckCircle2, Diamond, ShieldCheck, Crown, Flower2, TreePalm, CreditCard } from "lucide-react";
 
 export default function Pricing() {
@@ -73,9 +74,9 @@ export default function Pricing() {
               </li>
             </ul>
 
-            <a href="#templates" className="btn w-full py-4 bg-white text-[var(--color-coral)] border border-[var(--color-coral)] hover:bg-[var(--color-coral)] hover:text-white shadow-sm hover:shadow-md rounded-2xl font-bold text-center block transition-all cursor-pointer">
+            <Link href="/editor?plan=elegante" className="btn w-full py-4 bg-white text-[var(--color-coral)] border border-[var(--color-coral)] hover:bg-[var(--color-coral)] hover:text-white shadow-sm hover:shadow-md rounded-2xl font-bold text-center block transition-all cursor-pointer">
               اطلب الباقة الأنيقة
-            </a>
+            </Link>
           </div>
         </div>
 
@@ -128,9 +129,9 @@ export default function Pricing() {
               </li>
             </ul>
 
-            <a href="#templates" className="btn w-full py-4.5 bg-[var(--color-coral)] text-white shadow-lg hover:shadow-xl rounded-2xl font-extrabold text-lg text-center block hover:scale-[1.03] transition-all cursor-pointer">
+            <Link href="/editor?plan=diamant" className="btn w-full py-4.5 bg-[var(--color-coral)] text-white shadow-lg hover:shadow-xl rounded-2xl font-extrabold text-lg text-center block hover:scale-[1.03] transition-all cursor-pointer">
               احجز الباقة الماسية ✨
-            </a>
+            </Link>
           </div>
         </div>
 
@@ -172,9 +173,9 @@ export default function Pricing() {
               </li>
             </ul>
 
-            <a href="#templates" className="btn w-full py-4 bg-white text-[var(--color-coral)] border border-[var(--color-coral)] hover:bg-[var(--color-coral)] hover:text-white shadow-sm hover:shadow-md rounded-2xl font-bold text-center block transition-all cursor-pointer">
+            <Link href="/editor?plan=royale" className="btn w-full py-4 bg-white text-[var(--color-coral)] border border-[var(--color-coral)] hover:bg-[var(--color-coral)] hover:text-white shadow-sm hover:shadow-md rounded-2xl font-bold text-center block transition-all cursor-pointer">
               اطلب باقة رويال
-            </a>
+            </Link>
           </div>
         </div>
       </div>

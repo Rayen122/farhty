@@ -16,6 +16,7 @@ import {
   Play,
 } from "lucide-react";
 import type { Template } from "../data";
+import PhotoGallery3D from "../../components/PhotoGallery3D";
 
 const GOLD = "#C9A24B";
 const GOLD_LIGHT = "#EBCF87";
@@ -330,6 +331,11 @@ export default function Imperiale({ template }: { template: Template }) {
           </a>
         </motion.div>
       </section>
+
+      {/* ═══════ GALERIE PHOTOS DES MARIÉS 3D 360 ═══════ */}
+      {t.photos && t.photos.length > 0 && (
+        <PhotoGallery3D photos={t.photos} goldColor={GOLD} textColor="#FFF" />
+      )}
 
       {/* ═══════ RSVP ═══════ */}
       <section className="relative py-28 px-6 z-[2] text-center">

@@ -19,6 +19,7 @@ import {
   Navigation,
 } from "lucide-react";
 import type { Template } from "../data";
+import PhotoGallery3D from "../../components/PhotoGallery3D";
 
 interface TunisianProps {
   template: Template;
@@ -465,6 +466,11 @@ export default function Tunisian({ template }: TunisianProps) {
           ))}
         </div>
       </section>
+
+      {/* ── GALERIE PHOTOS DES MARIÉS 3D 360 ── */}
+      {t.photos && t.photos.length > 0 && (
+        <PhotoGallery3D photos={t.photos} goldColor="#D4AF37" textColor="#0D1F2D" />
+      )}
 
       {/* ── FORMULAIRE RSVP ── */}
       <section className="py-24 px-6 bg-gradient-to-br from-[#1B5FA6] to-[#0D1F2D] text-white">

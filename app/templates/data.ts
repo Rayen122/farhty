@@ -19,12 +19,35 @@ export interface Template {
     story: { title: string; text: string }[];
     program: { time: string; title: string; desc: string }[];
     photos: string[];
+    musicUrl?: string;
+    musicTitle?: string;
+    quranVerse?: string;
+    hideRsvp?: boolean;
+    hideWishes?: boolean;
+    hideQuran?: boolean;
   };
   style: string;
   /** URL vidéo hero optionnelle (mp4/webm dans /public) */
   video?: string;
   /** Image de fond peinte optionnelle (jpg/png dans /public/images) */
   image?: string;
+  /** Coordonnées exactes de la salle, saisies dans l'éditeur (prioritaires sur lieu+ville) */
+  geo?: { lat: number; lng: number; address?: string };
+  /** Positions personnalisées des blocs de texte sur la carte, en % */
+  layout?: Record<string, { x: number; y: number }>;
+}
+
+/** Lien « ouvrir dans Google Maps ». Utilise le point GPS s'il existe, sinon le texte. */
+export function mapsLinkFor(t: Pick<Template, "geo" | "previewText">): string {
+  if (t.geo) return `https://maps.google.com/?q=${t.geo.lat},${t.geo.lng}`;
+  return `https://maps.google.com/?q=${encodeURIComponent(`${t.previewText.lieu} ${t.previewText.city}`)}`;
+}
+
+/** Même chose pour la carte intégrée */
+export function mapsEmbedFor(t: Pick<Template, "geo" | "previewText">): string {
+  const q = t.geo ? `${t.geo.lat},${t.geo.lng}` : `${t.previewText.lieu} ${t.previewText.city}`;
+  const zoom = t.geo ? 17 : 15;
+  return `https://maps.google.com/maps?q=${encodeURIComponent(q)}&t=&z=${zoom}&ie=UTF8&iwloc=&output=embed`;
 }
 
 export const templates: Template[] = [
@@ -53,7 +76,7 @@ export const templates: Template[] = [
         { time: "19:30", title: "فتح أبواب القصر", desc: "استقبال الضيوف والموسيقى الملكية" },
         { time: "21:00", title: "دخول العروسين القاعة الكبرى", desc: "مراسيم عقد القران والألعاب النارية" },
       ],
-      photos: ["1", "2"],
+      photos: [],
     },
     style: "da3wa-porte-chateau",
     video: "/templates/bab/assets/door.mp4",
@@ -84,7 +107,7 @@ export const templates: Template[] = [
         { time: "19:30", title: "استقبال كبار الزوار", desc: "ترحيب ملكي بالضيوف الكرام" },
         { time: "21:00", title: "إضاءة القصر", desc: "دخول العروسين وبدء الاحتفال" },
       ],
-      photos: ["1", "2"],
+      photos: [],
     },
     style: "da3wa-palais-or",
     video: "/videos/palais-or.mp4",
@@ -115,11 +138,11 @@ export const templates: Template[] = [
         { time: "19:00", title: "فتح المخطوط الملكي", desc: "استقبال الضيوف على أنغام المالوف" },
         { time: "20:30", title: "مراسم عقد القران", desc: "توقيع العهد وسط العائلة والأحباب" },
       ],
-      photos: ["1", "2"],
+      photos: [],
     },
     style: "da3wa-parchemin-royal",
     video: "/videos/scroll-parchemin.mp4",
-    image: "/images/royal_scroll.webp"
+    image: "/images/parchemin_royal_cover.jpg"
   },
   {
     id: 305,
@@ -146,11 +169,11 @@ export const templates: Template[] = [
         { time: "19:30", title: "استقبال الضيوف", desc: "كوكتيل ترحيبي على أنغام الكمان" },
         { time: "21:00", title: "دخول العروسين", desc: "بداية الاحتفال والألعاب النارية" },
       ],
-      photos: ["1", "2"],
+      photos: [],
     },
     style: "da3wa-lettre-royale",
     video: "/videos/v1.mp4",
-    image: "/images/velvet_envelope.webp"
+    image: "/images/lettre_royale_cover.jpg"
   },
   {
     id: 203,
@@ -177,7 +200,7 @@ export const templates: Template[] = [
         { time: "20:00", title: "إضاءة الفوانيس", desc: "إطلاق الفوانيس المضيئة في السماء" },
         { time: "21:30", title: "عشاء سهرة الشموع", desc: "موسيقى هادئة وجلسة شاعرية" },
       ],
-      photos: ["1", "2"],
+      photos: [],
     },
     style: "da3wa-lanternes",
     video: "/videos/sindrella.mp4",
@@ -208,7 +231,7 @@ export const templates: Template[] = [
         { time: "19:00", title: "استقبال الكريستال", desc: "عزف الكمان والمشروبات الترحيبية" },
         { time: "20:30", title: "دخول القاعة الكبرى", desc: "مراسيم الزفاف وإضاءة اللسترات" },
       ],
-      photos: ["1", "2"],
+      photos: [],
     },
     style: "da3wa-cristal",
     video: "/templates/ring/assets/box-video.mp4",
@@ -239,7 +262,7 @@ export const templates: Template[] = [
         { time: "18:00", title: "استقبال الحديقة", desc: "عصير الفواكه الطبيعية وعزف الناي" },
         { time: "19:30", title: "عقد القران في الروضة", desc: "تبادل الخواتم أمام النافورة" },
       ],
-      photos: ["1", "2"],
+      photos: [],
     },
     style: "da3wa-jardin-royal",
     video: "/templates/reverie/assets/envelope.mp4",
@@ -270,7 +293,7 @@ export const templates: Template[] = [
         { time: "20:00", title: "سهرة الخيمة الملكية", desc: "استقبال بالطبل العربي والأغاني البدوية" },
         { time: "21:30", title: "عشاء الواحة", desc: "مأدبة العشاء التونسي الأصيل" },
       ],
-      photos: ["1", "2"],
+      photos: [],
     },
     style: "da3wa-oasis",
     video: "/templates/rozana/assets/entrance.mp4",
@@ -301,7 +324,7 @@ export const templates: Template[] = [
         { time: "18:30", title: "استقبال الضيوف", desc: "ترحيب حار وعصير طازج" },
         { time: "19:30", title: "مراسيم الزفاف", desc: "دخول العروسين وتبادل الوعود" },
       ],
-      photos: ["1", "2", "3"],
+      photos: [],
     },
     style: "da3wa-classic",
     image: "/images/bg_classic.webp"
@@ -334,7 +357,7 @@ export const templates: Template[] = [
         { time: "20:00", title: "Dîner", desc: "Dîner raffiné aux saveurs tunisiennes" },
         { time: "22:00", title: "Soirée", desc: "Danse et fête jusqu'au petit matin" },
       ],
-      photos: ["1", "2", "3"],
+      photos: [],
     },
     style: "marsala-3d",
     image: "/images/lella_beya_4k.webp"
@@ -367,7 +390,7 @@ export const templates: Template[] = [
         { time: "21:00", title: "Festin", desc: "Dîner de gala aux chandelles" },
         { time: "23:00", title: "Bal", desc: "Ouverture du bal et grande soirée" },
       ],
-      photos: ["1", "2", "3"],
+      photos: [],
     },
     style: "imperiale",
     image: "/images/royal_curtains_4k.webp",
@@ -400,7 +423,7 @@ export const templates: Template[] = [
         { time: "19:00", title: "Cocktail", desc: "Sorbets de bienvenue sous les tonnelles" },
         { time: "21:00", title: "Dîner", desc: "Dîner aux chandelles en plein air" },
       ],
-      photos: ["1", "2", "3"],
+      photos: [],
     },
     style: "jardin",
     image: "/images/bg_reverie.webp",
@@ -433,7 +456,7 @@ export const templates: Template[] = [
         { time: "20:00", title: "Dîner de gala", desc: "Dîner raffiné aux saveurs exceptionnelles" },
         { time: "22:30", title: "Danse & Lumières", desc: "Ouverture du bal et feu d'artifice sur la baie" },
       ],
-      photos: ["1", "2", "3"],
+      photos: [],
     },
     style: "amour",
     image: "/images/amour_4k.webp",
@@ -466,7 +489,7 @@ export const templates: Template[] = [
         { time: "21:00", title: "Dîner de gala", desc: "Festin royal aux chandelles et saveurs exceptionnelles" },
         { time: "23:00", title: "Grande soirée et danse", desc: "Ouverture du bal et nuit de fête" },
       ],
-      photos: ["1", "2", "3"],
+      photos: [],
     },
     style: "la-joie",
     image: "/images/la_joie_columns_4k.webp",
@@ -499,7 +522,7 @@ export const templates: Template[] = [
         { time: "20:00", title: "Cocktail", desc: "Eau de fleur d'oranger et douceurs" },
         { time: "22:00", title: "Dîner", desc: "Dîner sous les orangers illuminés" },
       ],
-      photos: ["1", "2", "3"],
+      photos: [],
     },
     style: "jasmin",
     image: "/images/jasmin_bg.webp",
@@ -532,11 +555,36 @@ export const templates: Template[] = [
         { time: "21:00", title: "Dîner royal", desc: "Festin traditionnel revisité par notre chef" },
         { time: "23:00", title: "Soirée orientale", desc: "Musique, danse et fête jusqu'au matin" },
       ],
-      photos: ["1", "2", "3"],
+      photos: [],
     },
     style: "tunisian",
     image: "/images/tunisian_envelope_exterior.webp",
   },
+  {
+    id: 14,
+    slug: "moustache-tunisie",
+    category: "Luxe & Tradition",
+    name: "Moustache Tunisie",
+    subtitle: "High-End Scroll World 10K",
+    description: "Une expérience immersive de type scroll-world. Moustache Tunisie : L'art du sur-mesure et du smoking haute couture.",
+    accent: "#D4AF37",
+    secondary: "#111111",
+    bg: "linear-gradient(160deg, #222 0%, #111 50%, #000 100%)",
+    decorations: ["⚜️", "✨", "🎬"],
+    previewText: {
+      bride: "",
+      groom: "",
+      date: "",
+      time: "",
+      lieu: "Boutique Moustache Tunisie",
+      city: "Tunis",
+      story: [],
+      program: [],
+      photos: [],
+    },
+    style: "moustache",
+    image: "/images/bg_classic.webp", // Placeholder
+  }
 ];
 
 export const getTemplateBySlug = (slug: string) => templates.find(t => t.slug === slug);

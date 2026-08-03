@@ -236,8 +236,8 @@ export default function PreviewModal({ template, isOpen, onClose }: PreviewModal
               <div className="pt-4 border-t border-charcoal/5 space-y-3">
                 <div className="text-xs text-charcoal/50">A partir de</div>
                 <div className="text-3xl font-display text-charcoal">89 <span className="text-lg">DT</span></div>
-                <button className="w-full bg-charcoal text-white py-3 rounded-xl text-sm font-medium hover:bg-charcoal/90 transition-all">Utiliser ce modele</button>
-                <button className="w-full border border-charcoal/10 py-3 rounded-xl text-sm text-charcoal hover:border-charcoal transition-all">Voir la demo live</button>
+                <a href={`/editor?template=${template.id}`} className="w-full bg-charcoal text-white py-3 rounded-xl text-sm font-medium hover:bg-charcoal/90 transition-all block text-center cursor-pointer">Utiliser ce modèle</a>
+                <button onClick={onClose} className="w-full border border-charcoal/10 py-3 rounded-xl text-sm text-charcoal hover:border-charcoal transition-all cursor-pointer">إغلاق المعاينة</button>
               </div>
             </div>
           </motion.div>
