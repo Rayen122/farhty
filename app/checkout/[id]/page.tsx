@@ -4,6 +4,11 @@ import { Suspense, useEffect, useState } from "react";
 import { useParams, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { Check, Copy, Loader2, ShieldCheck, ArrowLeft } from "lucide-react";
+import { PHONE_E164 } from "../../lib/contact";
+
+/* Le transfert D17 arrive sur le numéro de téléphone du marchand : à défaut de
+   `NEXT_PUBLIC_D17_NUMBER`, on affiche celui du contact plutôt que rien. */
+const D17_NUMBER = process.env.NEXT_PUBLIC_D17_NUMBER || PHONE_E164.replace(/\D/g, "");
 
 /* Barème dupliqué côté affichage uniquement : le montant qui fait foi
    est celui figé sur l'invitation par le serveur à sa création. */
@@ -42,8 +47,7 @@ function Checkout() {
   const [copied, setCopied] = useState(false);
   const [origin, setOrigin] = useState("");
 
-  /* Numéro D17 du marchand — variable publique, affichée telle quelle au client */
-  const d17 = process.env.NEXT_PUBLIC_D17_NUMBER ?? "";
+  const d17 = D17_NUMBER;
 
   useEffect(() => {
     let cancelled = false;
@@ -172,22 +176,12 @@ function Checkout() {
 
             <ol className="space-y-3 text-sm text-[#F4E4BA]/80 mb-6 list-decimal list-inside">
               <li>
-                حوّل المبلغ عبر تطبيق <strong className="text-[#D4AF37]">D17</strong>
-                {d17 ? (
-                  <>
-                    {" "}إلى الرقم <strong className="text-[#F4E4BA]" dir="ltr">{d17}</strong>
-                  </>
-                ) : null}
+                حوّل المبلغ عبر تطبيق <strong className="text-[#D4AF37]">D17</strong>{" "}
+                إلى الرقم <strong className="text-[#F4E4BA]" dir="ltr">{d17}</strong>
               </li>
               <li>انسخ رقم العملية (Référence) من التطبيق</li>
               <li>ألصقه هنا وأرسله لنا</li>
             </ol>
-
-            {!d17 && (
-              <p className="text-[11px] text-amber-300/80 bg-amber-950/40 border border-amber-500/30 rounded-lg px-3 py-2 mb-4">
-                رقم D17 غير مضبوط بعد على الموقع.
-              </p>
-            )}
 
             <input
               value={phone}
