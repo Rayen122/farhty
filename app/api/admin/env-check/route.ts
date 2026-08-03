@@ -16,6 +16,9 @@ export async function GET() {
 
   return NextResponse.json(
     {
+      /* `defined` sépare « variable absente » de « variable présente mais vide » :
+         les deux donnaient length 0 et masquaient la vraie cause. */
+      defined: raw !== undefined,
       set: typeof raw === "string" && raw.length > 0,
       length: raw?.length ?? 0,
       /* Repère les collages qui ont emporté un espace ou un retour à la ligne :
