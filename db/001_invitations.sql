@@ -22,6 +22,11 @@ create index if not exists invitations_slug_idx on invitations (slug);
 alter table invitations add column if not exists plan    text  not null default 'elegante';
 alter table invitations add column if not exists payment jsonb not null default '{"status":"unpaid","amountDT":49}'::jsonb;
 
+-- Téléphone laissé par le client au moment de déclarer son virement D17.
+-- Le driver Neon l'écrit dans `create` et `update` : sans cette colonne,
+-- toute création d'invitation échoue.
+alter table invitations add column if not exists phone text;
+
 -- Retrouver les paiements à vérifier
 create index if not exists invitations_payment_status_idx
   on invitations ((payment->>'status'));
