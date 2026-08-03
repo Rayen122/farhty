@@ -168,13 +168,23 @@ function TemplateCard({ item, onSelect }: { item: Template; onSelect: (slug: str
       {/* Dark gradient overlay for consistent text contrast */}
       <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-black/10 transition-opacity duration-300" />
 
-      {/* Center Play Button for Preview */}
-      <div
-        className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 scale-90 group-hover:scale-100 z-10 pointer-events-none"
-      >
-        <div className="w-16 h-16 rounded-full bg-white/90 backdrop-blur-md flex items-center justify-center text-[var(--color-coral)] shadow-2xl">
+      {/* Center Play Button for Preview.
+          Le conteneur reste transparent aux clics : seul le rond réagit, pour que
+          le reste de la carte continue de mener à l'éditeur. Sur mobile il est
+          toujours visible — sans survol, une cible invisible détournerait les
+          appuis au centre de la carte. */}
+      <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 max-md:opacity-100 transition-opacity duration-300 z-10 pointer-events-none">
+        <button
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation();
+            onSelect(item.slug);
+          }}
+          aria-label={`معاينة ${item.name}`}
+          className="pointer-events-auto w-16 h-16 rounded-full bg-white/90 backdrop-blur-md flex items-center justify-center text-[var(--color-coral)] shadow-2xl scale-90 transition-transform duration-300 hover:bg-white group-hover:scale-100 cursor-pointer"
+        >
           <Play className="w-6 h-6 fill-[var(--color-coral)] ml-1" />
-        </div>
+        </button>
       </div>
 
       {/* Content Details & Actions */}
