@@ -559,31 +559,6 @@ export const templates: Template[] = [
     },
     style: "tunisian",
     image: "/images/tunisian_envelope_exterior.webp",
-  },
-  {
-    id: 14,
-    slug: "moustache-tunisie",
-    category: "Luxe & Tradition",
-    name: "Moustache Tunisie",
-    subtitle: "High-End Scroll World 10K",
-    description: "Une expérience immersive de type scroll-world. Moustache Tunisie : L'art du sur-mesure et du smoking haute couture.",
-    accent: "#D4AF37",
-    secondary: "#111111",
-    bg: "linear-gradient(160deg, #222 0%, #111 50%, #000 100%)",
-    decorations: ["⚜️", "✨", "🎬"],
-    previewText: {
-      bride: "",
-      groom: "",
-      date: "",
-      time: "",
-      lieu: "Boutique Moustache Tunisie",
-      city: "Tunis",
-      story: [],
-      program: [],
-      photos: [],
-    },
-    style: "moustache",
-    image: "/images/bg_classic.webp", // Placeholder
   }
 ];
 

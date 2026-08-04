@@ -22,7 +22,6 @@ import LaJoie from "../designs/LaJoie";
 import Jasmin from "../designs/Jasmin";
 import Tunisian from "../designs/Tunisian";
 import Da3waTemplates from "../designs/Da3waTemplates";
-import MoustacheTunisie from "../designs/MoustacheTunisie";
 import DeviceFrame from "../../components/DeviceFrame";
 import MusicPlayerWidget from "../../components/MusicPlayerWidget";
 import { useInvitationStore, subscribeToDraftAcrossFrames } from "../../lib/invitationStore";
@@ -477,7 +476,6 @@ function TemplateContent({ slugProp, saved }: { slugProp?: string; saved?: Saved
     if (template.style === "imperiale") return <Imperiale template={template} />;
     if (template.style === "jardin") return <JardinVintage template={template} />;
     if (template.style === "jasmin") return <Jasmin template={template} />;
-    if (template.style === "moustache") return <MoustacheTunisie />;
     return <Tunisian template={template} />;
   };
 
