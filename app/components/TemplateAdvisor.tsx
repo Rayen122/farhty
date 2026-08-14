@@ -1,15 +1,23 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useRouter } from "next/navigation";
-import { MessageCircleHeart, X, RotateCcw, Sparkles, Crown } from "lucide-react";
+import { MessageCircleHeart, X, RotateCcw, Sparkles, Crown, Volume2, VolumeX } from "lucide-react";
 import { ADVISOR_QUESTIONS, recommend, type AdvisorTag } from "../lib/templateAdvisor";
 import { useLocale } from "./LocaleProvider";
 
 type Answer = { questionId: string; optionId: string; tags: AdvisorTag[] };
 
 const HINT_SESSION_KEY = "farhty-advisor-hint";
+const MUTE_STORAGE_KEY = "farhty-advisor-muted";
+
+/** Code de voix par langue. `ar-TN` n'existe pas partout : `ar` prend le relais. */
+const SPEECH_LANG: Record<string, string[]> = {
+  ar: ["ar-SA", "ar"],
+  tn: ["ar-TN", "ar-SA", "ar"],
+  fr: ["fr-FR", "fr"],
+};
 
 /**
  * Conseiller de modèles présenté comme une conversation.
@@ -25,7 +33,16 @@ export default function TemplateAdvisor() {
   const [answers, setAnswers] = useState<Answer[]>([]);
   const [hintShown, setHintShown] = useState(false);
   const [hovering, setHovering] = useState(false);
+  const [muted, setMuted] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    try {
+      setMuted(localStorage.getItem(MUTE_STORAGE_KEY) === "1");
+    } catch {
+      /* stockage bloqué : le son reste actif */
+    }
+  }, []);
 
   /* L'accroche se montre d'elle-même une fois par session : sur mobile il n'y a
      pas de survol, et sans elle le bouton n'est qu'une icône sans explication. */
@@ -68,9 +85,52 @@ export default function TemplateAdvisor() {
 
   const label = (key: string) => (t.advisor as Record<string, string>)[key] ?? key;
 
+  /* Lecture de l'accroche à voix haute via la synthèse vocale du navigateur :
+     aucun fichier audio à héberger, aucune clé API. La qualité de la voix arabe
+     dépend de l'appareil, et certains navigateurs refusent de parler tant que
+     l'utilisateur n'a rien cliqué — d'où le repli silencieux plutôt qu'une erreur. */
+  const speak = useCallback(
+    (phrase: string) => {
+      if (muted || typeof window === "undefined" || !("speechSynthesis" in window)) return;
+      try {
+        const codes = SPEECH_LANG[locale] ?? SPEECH_LANG.ar;
+        const voices = window.speechSynthesis.getVoices();
+        const voice = codes
+          .map((code) => voices.find((v) => v.lang.toLowerCase().startsWith(code.toLowerCase())))
+          .find(Boolean);
+
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(phrase);
+        utterance.lang = voice?.lang ?? codes[0];
+        if (voice) utterance.voice = voice;
+        utterance.rate = 0.95;
+        window.speechSynthesis.speak(utterance);
+      } catch {
+        /* pas de voix disponible : l'accroche reste lisible à l'écrit */
+      }
+    },
+    [locale, muted]
+  );
+
+  const toggleMute = () => {
+    const next = !muted;
+    setMuted(next);
+    if (next && typeof window !== "undefined" && "speechSynthesis" in window) {
+      window.speechSynthesis.cancel();
+    }
+    try {
+      localStorage.setItem(MUTE_STORAGE_KEY, next ? "1" : "0");
+    } catch {}
+  };
+
   const choose = (optionId: string, tags: AdvisorTag[]) => {
     setAnswers((prev) => [...prev, { questionId: current.id, optionId, tags }]);
   };
+
+  /* L'accroche automatique est lue à voix haute au moment où elle apparaît. */
+  useEffect(() => {
+    if (hintShown) speak(t.advisor.teaser);
+  }, [hintShown, speak, t.advisor.teaser]);
 
   const restart = () => setAnswers([]);
 
@@ -80,22 +140,43 @@ export default function TemplateAdvisor() {
           d'appel à l'action, qui occupe déjà le bas de l'écran. */}
       <div
         className="fixed left-4 bottom-28 md:bottom-6 z-[90] flex items-end gap-2"
-        onMouseEnter={() => setHovering(true)}
+        onMouseEnter={() => {
+          setHovering(true);
+          speak(t.advisor.teaser);
+        }}
         onMouseLeave={() => setHovering(false)}
       >
-        <button
-          onClick={() => setOpen(true)}
-          aria-label={t.advisor.launcher}
-          aria-describedby="advisor-teaser"
-          className="shrink-0 flex items-center gap-2 rounded-full bg-[var(--color-coral)] text-white pl-4 pr-5 py-3 shadow-[0_10px_30px_rgba(139,10,26,0.35)] hover:-translate-y-0.5 transition-transform cursor-pointer"
-        >
-          <MessageCircleHeart className="w-5 h-5" />
-          <span className="text-sm font-extrabold hidden sm:inline">{t.advisor.launcher}</span>
-        </button>
+        <div className="relative shrink-0">
+          {/* Onde qui se répète tant que le panneau est fermé : attire l'œil sans
+              bouger le bouton, donc sans rendre la cible difficile à viser. */}
+          {!open && (
+            <motion.span
+              aria-hidden
+              className="absolute inset-0 rounded-full bg-[var(--color-coral)]"
+              animate={{ scale: [1, 1.45], opacity: [0.5, 0] }}
+              transition={{ duration: 1.8, repeat: Infinity, ease: "easeOut" }}
+            />
+          )}
+
+          <motion.button
+            onClick={() => {
+              speak(t.advisor.teaser);
+              setOpen(true);
+            }}
+            aria-label={t.advisor.launcher}
+            aria-describedby="advisor-teaser"
+            animate={open ? { y: 0 } : { y: [0, -5, 0] }}
+            transition={{ duration: 2.4, repeat: open ? 0 : Infinity, ease: "easeInOut" }}
+            className="relative flex items-center gap-2 rounded-full bg-[var(--color-coral)] text-white pl-4 pr-5 py-3 shadow-[0_10px_30px_rgba(139,10,26,0.35)] cursor-pointer"
+          >
+            <MessageCircleHeart className="w-5 h-5" />
+            <span className="text-sm font-extrabold hidden sm:inline">{t.advisor.launcher}</span>
+          </motion.button>
+        </div>
 
         <AnimatePresence>
           {(hovering || hintShown) && !open && (
-            <motion.p
+            <motion.div
               id="advisor-teaser"
               role="status"
               initial={{ opacity: 0, x: -8, scale: 0.96 }}
@@ -105,10 +186,18 @@ export default function TemplateAdvisor() {
               dir={locale === "fr" ? "ltr" : "rtl"}
               /* Toujours à droite du bouton : celui-ci est ancré à gauche de
                  l'écran dans les deux sens de lecture. */
-              className="max-w-[62vw] sm:max-w-xs rounded-2xl rounded-bl-md bg-white border border-[var(--color-line)] px-4 py-2.5 text-xs sm:text-sm font-bold text-[var(--color-ink)] shadow-xl"
+              className="max-w-[62vw] sm:max-w-xs rounded-2xl rounded-bl-md bg-white border border-[var(--color-line)] px-4 py-2.5 text-xs sm:text-sm font-bold text-[var(--color-ink)] shadow-xl flex items-center gap-2"
             >
-              {t.advisor.teaser}
-            </motion.p>
+              <span className="flex-1">{t.advisor.teaser}</span>
+              <button
+                onClick={toggleMute}
+                aria-label={muted ? t.advisor.soundOn : t.advisor.soundOff}
+                aria-pressed={muted}
+                className="shrink-0 text-[var(--color-muted)] hover:text-[var(--color-coral)] transition-colors cursor-pointer"
+              >
+                {muted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
+              </button>
+            </motion.div>
           )}
         </AnimatePresence>
       </div>

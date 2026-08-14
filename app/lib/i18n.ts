@@ -186,6 +186,8 @@ const ar = {
   advisor: {
     launcher: "مساعد اختيار التصميم",
     teaser: "حائر في الاختيار؟ نجد لك التصميم المناسب في أقل من دقيقة.",
+    soundOff: "إيقاف الصوت",
+    soundOn: "تشغيل الصوت",
     title: "مساعد التصاميم",
     intro: "أهلاً! نسألك أربعة أسئلة قصيرة ونقترح عليك التصميم الأنسب لمناسبتك.",
     q_style: "ما الطابع الذي تريده لدعوتك؟",
@@ -370,6 +372,8 @@ const tn: Dictionary = {
   advisor: {
     launcher: "مساعد اختيار التصميم",
     teaser: "محتار شنوّة تختار؟ نلقالك التصميم اللي يمشيلك في أقل من دقيقة.",
+    soundOff: "طفّي الصوت",
+    soundOn: "شعّل الصوت",
     title: "مساعد التصاميم",
     intro: "أهلا! نسألوك أربع أسئلة قصار ونقترحولك التصميم اللي يمشيلك.",
     q_style: "شنوة الطابع اللي تحبّه في دعوتك؟",
@@ -560,6 +564,8 @@ const fr: Dictionary = {
   advisor: {
     launcher: "Trouver mon design",
     teaser: "Vous hésitez ? Je trouve votre design en moins d'une minute.",
+    soundOff: "Couper le son",
+    soundOn: "Activer le son",
     title: "Assistant design",
     intro: "Bonjour ! Quatre questions rapides, et je vous propose le design le plus adapté à votre mariage.",
     q_style: "Quel style souhaitez-vous pour votre invitation ?",
