@@ -35,6 +35,10 @@ export default function TemplateAdvisor() {
   const [hovering, setHovering] = useState(false);
   const [muted, setMuted] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const voiceRef = useRef<HTMLAudioElement | null>(null);
+  /* Langues dont on sait déjà qu'aucun enregistrement n'existe : évite de
+     redemander un fichier absent à chaque survol. */
+  const missingRecording = useRef<Set<string>>(new Set());
 
   useEffect(() => {
     try {
@@ -89,7 +93,7 @@ export default function TemplateAdvisor() {
      aucun fichier audio à héberger, aucune clé API. La qualité de la voix arabe
      dépend de l'appareil, et certains navigateurs refusent de parler tant que
      l'utilisateur n'a rien cliqué — d'où le repli silencieux plutôt qu'une erreur. */
-  const speak = useCallback(
+  const speakSynthesised = useCallback(
     (phrase: string) => {
       if (muted || typeof window === "undefined" || !("speechSynthesis" in window)) return;
       try {
@@ -112,11 +116,39 @@ export default function TemplateAdvisor() {
     [locale, muted]
   );
 
+  const speak = useCallback(
+    (phrase: string) => {
+      if (muted || typeof window === "undefined") return;
+
+      /* Un enregistrement humain sonne toujours mieux qu'une synthèse, et aucune
+         voix tunisienne n'existe côté système. Si le fichier est présent on le
+         joue ; sinon on retombe sur la synthèse, sans que rien ne casse. */
+      if (missingRecording.current.has(locale)) {
+        speakSynthesised(phrase);
+        return;
+      }
+
+      const recorded = new Audio(`/audio/advisor-${locale}.mp3`);
+      recorded.play().then(
+        () => {
+          voiceRef.current?.pause();
+          voiceRef.current = recorded;
+        },
+        () => {
+          missingRecording.current.add(locale);
+          speakSynthesised(phrase);
+        }
+      );
+    },
+    [locale, muted]
+  );
+
   const toggleMute = () => {
     const next = !muted;
     setMuted(next);
-    if (next && typeof window !== "undefined" && "speechSynthesis" in window) {
-      window.speechSynthesis.cancel();
+    if (next && typeof window !== "undefined") {
+      if ("speechSynthesis" in window) window.speechSynthesis.cancel();
+      voiceRef.current?.pause();
     }
     try {
       localStorage.setItem(MUTE_STORAGE_KEY, next ? "1" : "0");
