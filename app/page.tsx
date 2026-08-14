@@ -5,6 +5,7 @@ import HowItWorks from "./components/HowItWorks";
 import Features from "./components/Features";
 import Pricing from "./components/Pricing";
 import FloatingCTA from "./components/FloatingCTA";
+import TemplateAdvisor from "./components/TemplateAdvisor";
 import Footer from "./components/Footer";
 
 /* Données structurées : permet à Google d'identifier l'entreprise et le site
@@ -49,6 +50,7 @@ export default function Home() {
       <Pricing />
       <Footer />
       <FloatingCTA />
+      <TemplateAdvisor />
     </main>
   );
 }
