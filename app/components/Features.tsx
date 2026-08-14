@@ -12,49 +12,52 @@ import {
   Crown,
   Diamond
 } from "lucide-react";
+import { useT } from "./LocaleProvider";
 
 export default function Features() {
+  const t = useT();
+
   const features = [
     {
       icon: MessageSquareCheck,
-      title: "RSVP تأكيد النخبة",
-      desc: "يوصلك كشف كامل ومنظم بأعداد وأسماء ضيوفك لحظة تأكيدهم، مباشرة على الواتساب.",
-      tag: "تأكيد فوري",
+      title: t.features.rsvpTitle,
+      desc: t.features.rsvpDesc,
+      tag: t.features.rsvpTag,
     },
     {
       icon: MapPin,
-      title: "التوجيه الفاخر للموقع",
-      desc: "رابط خرائط جوجل مدمج بأناقة ليرشد ضيوفك إلى مكان الحفل بكل سهولة ورقي.",
+      title: t.features.mapTitle,
+      desc: t.features.mapDesc,
       tag: "Google Maps",
     },
     {
       icon: Music,
-      title: "الأجواء الموسيقية",
-      desc: "تجربة سمعية تأسر القلوب—اختر بين المعزوفات الكلاسيكية، أو المالوف التونسي الأصيل.",
-      tag: "موسيقى سينمائية",
+      title: t.features.musicTitle,
+      desc: t.features.musicDesc,
+      tag: t.features.musicTag,
     },
     {
       icon: Calendar,
-      title: "تنبيه تقويم الشخصيات",
-      desc: "إضافة أوتوماتيكية لموعد حفلكم في هواتف ضيوفكم لضمان حضورهم في ليلة العمر.",
+      title: t.features.calendarTitle,
+      desc: t.features.calendarDesc,
       tag: "Save The Date",
     },
     {
       icon: Heart,
-      title: "دفتر التهاني الملكي",
-      desc: "سجل رقمي فاخر يدوّن فيه أحبابكم أجمل أمنياتهم وتهانيهم لتبقى ذكرى خالدة.",
-      tag: "جدار التهاني",
+      title: t.features.guestbookTitle,
+      desc: t.features.guestbookDesc,
+      tag: t.features.guestbookTag,
     },
     {
       icon: QrCode,
-      title: "دعوات الـ VIP المشفرة",
-      desc: "رموز QR خاصة لكل ضيف لضمان تنظيم استثنائي وسرعة الدخول للقاعة.",
+      title: t.features.qrTitle,
+      desc: t.features.qrDesc,
       tag: "QR Code",
     },
   ];
 
   return (
-    <section id="features" className="container-x py-24 bg-[var(--color-cream)] relative" dir="rtl">
+    <section id="features" className="container-x py-24 bg-[var(--color-cream)] relative">
       {/* Background Glows */}
       <div className="absolute top-0 right-1/4 w-[600px] h-[600px] bg-[var(--color-velvet)] blur-[120px] rounded-full pointer-events-none" />
       <div className="absolute bottom-0 left-1/4 w-[500px] h-[500px] bg-[var(--color-velvet)] blur-[120px] rounded-full pointer-events-none" />
@@ -69,10 +72,10 @@ export default function Features() {
           className="text-4xl sm:text-5xl font-extrabold text-[var(--color-ink)] mb-4"
           style={{ fontFamily: "var(--font-display)" }}
         >
-          خدمات استثنائية لمناسبة لا تُنسى
+          {t.features.title}
         </h2>
         <p className="text-[var(--color-muted)] text-base sm:text-lg font-semibold max-w-2xl mx-auto">
-          كل تفصيلة صُممت بعناية فائقة لتعكس رقيكم، لتكون تجربتكم وتجربة ضيوفكم متكاملة، مبهرة، وخالية من أي عناء.
+          {t.features.subtitle}
         </p>
       </div>
 
@@ -113,7 +116,7 @@ export default function Features() {
               <div className="mt-8 pt-4 border-t border-[var(--color-line-soft)] flex items-center justify-between text-xs font-bold text-[var(--color-muted)] relative z-10 transition-colors">
                 <div className="flex items-center gap-2">
                   <ShieldCheck className="w-4 h-4 text-[var(--color-gold)]" />
-                  <span>تضمين قياسي</span>
+                  <span>{t.features.standard}</span>
                 </div>
                 <Diamond className="w-3 h-3 text-[var(--color-coral)] opacity-0 group-hover:opacity-100 transition-opacity" />
               </div>

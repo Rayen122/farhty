@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Lalezar, Tajawal, Fredoka, Vazirmatn, Playfair_Display, DM_Sans, Great_Vibes, Cormorant_Infant, Amiri, Cairo } from "next/font/google";
 import "./globals.css";
 import AntiCopyGuard from "./components/AntiCopyGuard";
+import LocaleProvider from "./components/LocaleProvider";
+import LanguageGate from "./components/LanguageGate";
 
 const lalezar = Lalezar({
   variable: "--font-lalezar",
@@ -125,7 +127,12 @@ export default function RootLayout({
     <html lang="ar" dir="rtl" className={`${lalezar.variable} ${tajawal.variable} ${fredoka.variable} ${vazirmatn.variable} ${playfair.variable} ${dmSans.variable} ${greatVibes.variable} ${cormorant.variable} ${amiri.variable} ${cairo.variable}`}>
       <body className="min-h-full flex flex-col antialiased overflow-x-hidden w-full">
         <AntiCopyGuard />
-        {children}
+        {/* `lang` et `dir` posés ci-dessus sont ceux du rendu serveur ; le
+            fournisseur les corrige au montage selon la langue enregistrée. */}
+        <LocaleProvider>
+          <LanguageGate />
+          {children}
+        </LocaleProvider>
       </body>
     </html>
   );

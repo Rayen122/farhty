@@ -2,31 +2,34 @@
 
 import { motion } from "framer-motion";
 import { Mail, Sparkles, Send, CheckCircle2, Diamond } from "lucide-react";
+import { useT } from "./LocaleProvider";
 
 export default function HowItWorks() {
+  const t = useT();
+
   const steps = [
     {
       num: "I",
-      title: "اختيار التصميم",
-      desc: "انتقِ القالب الذي يتناغم مع ذوقك وأرسل تفاصيل المناسبة بكل سهولة.",
+      title: t.how.step1Title,
+      desc: t.how.step1Desc,
       icon: Mail,
     },
     {
       num: "II",
-      title: "الصياغة الفنية",
-      desc: "يقوم فريقنا بتجهيز دعوتك بأعلى معايير الجودة والأنميشن السينمائي.",
+      title: t.how.step2Title,
+      desc: t.how.step2Desc,
       icon: Sparkles,
     },
     {
       num: "III",
-      title: "الإرسال الفاخر",
-      desc: "شارك رابطك الخاص والمشفر مع ضيوفك ليعيشوا التجربة الفاخرة.",
+      title: t.how.step3Title,
+      desc: t.how.step3Desc,
       icon: Send,
     },
     {
       num: "IV",
-      title: "تأكيد النخبة",
-      desc: "استلم تأكيدات الحضور مباشرة وبطريقة منظمة تليق بمناسبتك.",
+      title: t.how.step4Title,
+      desc: t.how.step4Desc,
       icon: CheckCircle2,
     },
   ];
@@ -35,7 +38,6 @@ export default function HowItWorks() {
     <section
       id="how"
       className="py-24 bg-[var(--color-cream)] relative overflow-hidden"
-      dir="rtl"
     >
       {/* Background Ambient Glow */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-[var(--color-velvet)] rounded-full blur-[150px] pointer-events-none z-0" />
@@ -50,10 +52,10 @@ export default function HowItWorks() {
             className="text-4xl sm:text-5xl font-extrabold text-[var(--color-ink)] mb-4"
             style={{ fontFamily: "var(--font-display)" }}
           >
-            كيف نصنع التحفة؟
+            {t.how.title}
           </h2>
           <p className="text-[var(--color-muted)] text-base sm:text-lg font-semibold">
-            خطوات بسيطة تفصلك عن امتلاك أرقى دعوة رقمية على الإطلاق، مصممة خصيصاً لتخليد لحظاتك.
+            {t.how.subtitle}
           </p>
         </div>
 
@@ -102,7 +104,7 @@ export default function HowItWorks() {
             href="#templates"
             className="inline-flex items-center gap-3 px-10 py-4 bg-white border border-[var(--color-coral)] text-[var(--color-coral)] hover:bg-[var(--color-coral)] hover:text-white shadow-md hover:shadow-lg transition-all rounded-full font-bold text-base cursor-pointer"
           >
-            <span>ابدأ تصميمك الخاص</span>
+            <span>{t.how.cta}</span>
             <Diamond className="w-4 h-4" />
           </a>
         </div>

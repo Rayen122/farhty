@@ -3,8 +3,12 @@
 import { Diamond, Sparkles, MessageCircle, ArrowUp } from "lucide-react";
 import Image from "next/image";
 import { WHATSAPP_URL } from "../lib/contact";
+import { useT } from "./LocaleProvider";
+import LanguageSwitcher from "./LanguageSwitcher";
 
 export default function Footer() {
+  const t = useT();
+
   const scrollToTop = () => {
     if (typeof window !== "undefined") {
       window.scrollTo({ top: 0, behavior: "smooth" });
@@ -12,7 +16,7 @@ export default function Footer() {
   };
 
   return (
-    <footer className="bg-white text-[var(--color-ink)] pt-24 pb-12 border-t border-[var(--color-line)] relative overflow-hidden" dir="rtl">
+    <footer className="bg-white text-[var(--color-ink)] pt-24 pb-12 border-t border-[var(--color-line)] relative overflow-hidden">
       {/* Background Ambient Glow */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[400px] bg-[#FDF5F8] blur-[150px] opacity-70 pointer-events-none -z-10" />
       <div className="absolute bottom-0 right-0 w-[400px] h-[300px] bg-[#FAF6F0] blur-[120px] opacity-80 pointer-events-none -z-10" />
@@ -30,29 +34,29 @@ export default function Footer() {
                   فرحتي
                 </span>
                 <span className="text-xs text-[var(--color-muted)] font-bold mt-1 tracking-widest uppercase">
-                  دعوات النخبة الرقمية
+                  {t.footer.tagline}
                 </span>
               </div>
             </div>
             <p className="text-sm text-[var(--color-muted)] leading-relaxed max-w-md font-semibold">
-              نصمم دعوات تعكس فخامة مناسباتكم. لمسة من الرقي، تكنولوجيا متطورة، وتجربة استثنائية تبقى محفورة في ذاكرة ضيوفكم إلى الأبد.
+              {t.footer.about}
             </p>
           </div>
 
           {/* Quick Links */}
           <div className="space-y-5">
             <h4 className="text-xs font-bold text-[var(--color-coral)] tracking-[0.2em] uppercase flex items-center gap-2">
-              <Diamond className="w-3 h-3" /> الروابط
+              <Diamond className="w-3 h-3" /> {t.footer.linksTitle}
             </h4>
             <ul className="space-y-3 text-sm font-bold text-[var(--color-muted)]">
               <li>
-                <a href="#templates" className="hover:text-[var(--color-coral)] hover:translate-x-[-4px] transition-all inline-block">مجموعة التصاميم</a>
+                <a href="#templates" className="hover:text-[var(--color-coral)] hover:translate-x-[-4px] transition-all inline-block">{t.footer.linkTemplates}</a>
               </li>
               <li>
-                <a href="#features" className="hover:text-[var(--color-coral)] hover:translate-x-[-4px] transition-all inline-block">الخدمات الاستثنائية</a>
+                <a href="#features" className="hover:text-[var(--color-coral)] hover:translate-x-[-4px] transition-all inline-block">{t.footer.linkFeatures}</a>
               </li>
               <li>
-                <a href="#pricing" className="hover:text-[var(--color-coral)] hover:translate-x-[-4px] transition-all inline-block">باقات النخبة</a>
+                <a href="#pricing" className="hover:text-[var(--color-coral)] hover:translate-x-[-4px] transition-all inline-block">{t.footer.linkPricing}</a>
               </li>
             </ul>
           </div>
@@ -60,10 +64,10 @@ export default function Footer() {
           {/* Contact Col */}
           <div className="space-y-5">
             <h4 className="text-xs font-bold text-[var(--color-coral)] tracking-[0.2em] uppercase flex items-center gap-2">
-              <Sparkles className="w-3 h-3" /> الحجز والتواصل
+              <Sparkles className="w-3 h-3" /> {t.footer.contactTitle}
             </h4>
             <p className="text-sm text-[var(--color-muted)] leading-relaxed font-semibold">
-              مستشارونا متاحون على مدار الساعة لتلبية متطلباتكم الراقية.
+              {t.footer.contactText}
             </p>
             <a
               href={WHATSAPP_URL}
@@ -72,14 +76,14 @@ export default function Footer() {
               className="inline-flex items-center gap-2.5 px-6 py-3 rounded-full bg-white text-[var(--color-coral)] font-bold text-sm border border-[var(--color-coral)] hover:bg-[var(--color-coral)] hover:text-white shadow-sm hover:shadow-md transition-all cursor-pointer"
             >
               <MessageCircle className="w-4 h-4" />
-              <span>تواصل مع الخبراء</span>
+              <span>{t.footer.contactCta}</span>
             </a>
           </div>
         </div>
 
         {/* Bottom Bar */}
         <div className="pt-10 flex flex-col md:flex-row items-center justify-between gap-6 text-xs text-[var(--color-muted)] font-bold">
-          <p className="tracking-wider">© {new Date().getFullYear()} فرحتي. جميع الحقوق محفوظة لعلامتنا التجارية.</p>
+          <p className="tracking-wider">© {new Date().getFullYear()} Farhty · فرحتي. {t.footer.rights}</p>
           
           <button
             onClick={scrollToTop}
@@ -88,9 +92,11 @@ export default function Footer() {
             <ArrowUp className="w-4 h-4" />
           </button>
 
+          <LanguageSwitcher />
+
           <div className="flex items-center gap-2 tracking-widest uppercase">
-            <span>صُنع بفخامة في</span>
-            <span className="text-[var(--color-coral)] font-extrabold">تونس</span>
+            <span>{t.footer.madeIn}</span>
+            <span className="text-[var(--color-coral)] font-extrabold">{t.footer.tunisia}</span>
           </div>
         </div>
       </div>

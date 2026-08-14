@@ -2,10 +2,13 @@
 
 import Link from "next/link";
 import { CheckCircle2, Diamond, ShieldCheck, Crown, Flower2, TreePalm, CreditCard } from "lucide-react";
+import { useT } from "./LocaleProvider";
 
 export default function Pricing() {
+  const t = useT();
+
   return (
-    <section id="pricing" className="container-x py-24 bg-[var(--color-cream)] relative" dir="rtl">
+    <section id="pricing" className="container-x py-24 bg-[var(--color-cream)] relative">
       {/* Background Ambient Glows */}
       <div className="absolute top-1/4 left-0 w-[400px] h-[400px] bg-[var(--color-velvet)] blur-[130px] rounded-full pointer-events-none z-0" />
       <div className="absolute bottom-1/4 right-0 w-[400px] h-[400px] bg-[var(--color-velvet)] blur-[130px] rounded-full pointer-events-none z-0" />
@@ -20,14 +23,14 @@ export default function Pricing() {
           className="text-4xl sm:text-5xl font-extrabold text-[var(--color-ink)] mb-4"
           style={{ fontFamily: "var(--font-display)" }}
         >
-          باقات مصممة للنخبة
+          {t.pricing.title}
         </h2>
         <p className="text-[var(--color-muted)] text-base sm:text-lg font-semibold mb-6">
-          استثمار لمرة واحدة يضمن لك دعوة خالدة، بدون اشتراكات، وتسليم استثنائي في أقل من 24 ساعة.
+          {t.pricing.subtitle}
         </p>
         <div className="inline-flex items-center justify-center gap-2.5 px-6 py-2.5 rounded-full bg-white border border-[var(--color-line)] text-xs font-bold text-[var(--color-ink)] shadow-md">
           <CreditCard className="w-4 h-4 text-[var(--color-coral)]" />
-          <span>بوابات الدفع المشفرة والآمنة: D17 · Flouci · Bank Card · Sobflous</span>
+          <span>{t.pricing.payments}</span>
         </div>
       </div>
 
@@ -41,41 +44,41 @@ export default function Pricing() {
               <TreePalm className="w-6 h-6" />
             </div>
             <h3 className="relative z-10 text-2xl font-bold text-[var(--color-ink)] mb-2" style={{ fontFamily: "var(--font-amiri)" }}>
-              الباقة الأنيقة
+              {t.pricing.eleganteName}
             </h3>
-            <p className="relative z-10 text-sm text-[var(--color-muted)] font-semibold mb-6">البداية المثالية لدعوة راقية</p>
+            <p className="relative z-10 text-sm text-[var(--color-muted)] font-semibold mb-6">{t.pricing.eleganteTagline}</p>
             <div className="relative z-10 text-5xl font-extrabold text-[var(--color-ink)] drop-shadow-sm" style={{ fontFamily: "var(--font-display)" }}>
-              49 <span className="text-xl font-bold text-[var(--color-muted)]">د.ت</span>
+              49 <span className="text-xl font-bold text-[var(--color-muted)]">{t.pricing.currency}</span>
             </div>
-            <span className="relative z-10 text-xs text-[var(--color-muted)] font-bold block mt-2">دفعة واحدة ملمومة</span>
+            <span className="relative z-10 text-xs text-[var(--color-muted)] font-bold block mt-2">{t.pricing.oneOff}</span>
           </div>
 
           <div className="p-8 flex flex-col flex-1 justify-between">
             <ul className="space-y-4 mb-8">
               <li className="flex items-start gap-3 text-sm text-[var(--color-muted)] font-semibold group-hover:text-[var(--color-ink)] transition-colors">
                 <CheckCircle2 className="w-5 h-5 text-[var(--color-coral)] shrink-0" />
-                <span>اختيار من القوالب الرسمية الكلاسيكية</span>
+                <span>{t.pricing.eleganteF1}</span>
               </li>
               <li className="flex items-start gap-3 text-sm text-[var(--color-muted)] font-semibold group-hover:text-[var(--color-ink)] transition-colors">
                 <CheckCircle2 className="w-5 h-5 text-[var(--color-coral)] shrink-0" />
-                <span>رابط ويب مخصص باسم العروسين</span>
+                <span>{t.pricing.eleganteF2}</span>
               </li>
               <li className="flex items-start gap-3 text-sm text-[var(--color-muted)] font-semibold group-hover:text-[var(--color-ink)] transition-colors">
                 <CheckCircle2 className="w-5 h-5 text-[var(--color-coral)] shrink-0" />
-                <span>أنميشن الستار أو الظرف الرقمي</span>
+                <span>{t.pricing.eleganteF3}</span>
               </li>
               <li className="flex items-start gap-3 text-sm text-[var(--color-muted)] font-semibold group-hover:text-[var(--color-ink)] transition-colors">
                 <CheckCircle2 className="w-5 h-5 text-[var(--color-coral)] shrink-0" />
-                <span>دليل المواقع عبر خرائط جوجل</span>
+                <span>{t.pricing.eleganteF4}</span>
               </li>
               <li className="flex items-start gap-3 text-sm text-[var(--color-muted)] font-semibold group-hover:text-[var(--color-ink)] transition-colors">
                 <CheckCircle2 className="w-5 h-5 text-[var(--color-coral)] shrink-0" />
-                <span>عداد تنازلي دقيق لموعد الحفل</span>
+                <span>{t.pricing.eleganteF5}</span>
               </li>
             </ul>
 
             <Link href="/editor?plan=elegante" className="btn w-full py-4 bg-white text-[var(--color-coral)] border border-[var(--color-coral)] hover:bg-[var(--color-coral)] hover:text-white shadow-sm hover:shadow-md rounded-2xl font-bold text-center block transition-all cursor-pointer">
-              اطلب الباقة الأنيقة
+              {t.pricing.eleganteCta}
             </Link>
           </div>
         </div>
@@ -86,7 +89,7 @@ export default function Pricing() {
           
           <span className="absolute top-0 left-1/2 -translate-x-1/2 bg-[var(--color-coral)] text-white rounded-b-xl text-xs font-bold px-6 py-1.5 z-10 shadow-md flex items-center gap-2">
             <Diamond className="w-3.5 h-3.5 fill-white" />
-            <span>خيار النخبة المفضل</span>
+            <span>{t.pricing.popular}</span>
           </span>
 
           <div className="p-8 text-center pt-14 border-b border-[var(--color-line)] relative">
@@ -96,41 +99,41 @@ export default function Pricing() {
               <Crown className="w-8 h-8" />
             </div>
             <h3 className="relative z-10 text-3xl font-extrabold text-[var(--color-coral)] mb-2" style={{ fontFamily: "var(--font-amiri)" }}>
-              الباقة الماسية
+              {t.pricing.diamantName}
             </h3>
-            <p className="relative z-10 text-sm text-[var(--color-ink)] font-bold mb-6">تجربة كبار الشخصيات المتكاملة</p>
+            <p className="relative z-10 text-sm text-[var(--color-ink)] font-bold mb-6">{t.pricing.diamantTagline}</p>
             <div className="relative z-10 text-6xl font-extrabold text-[var(--color-ink)] drop-shadow-md" style={{ fontFamily: "var(--font-display)" }}>
-              89 <span className="text-2xl font-bold text-[var(--color-coral)]">د.ت</span>
+              89 <span className="text-2xl font-bold text-[var(--color-coral)]">{t.pricing.currency}</span>
             </div>
-            <span className="relative z-10 text-xs text-[var(--color-muted)] font-bold block mt-2">دفعة واحدة ملمومة</span>
+            <span className="relative z-10 text-xs text-[var(--color-muted)] font-bold block mt-2">{t.pricing.oneOff}</span>
           </div>
 
           <div className="p-8 flex flex-col flex-1 justify-between relative z-10">
             <ul className="space-y-4 mb-8">
               <li className="flex items-start gap-3 text-sm text-[var(--color-ink)] font-bold">
                 <CheckCircle2 className="w-5 h-5 text-[var(--color-coral)] shrink-0" />
-                <span>جميع مميزات الباقة الأنيقة</span>
+                <span>{t.pricing.diamantF1}</span>
               </li>
               <li className="flex items-start gap-3 text-sm text-[var(--color-ink)] font-bold">
                 <CheckCircle2 className="w-5 h-5 text-[var(--color-coral)] shrink-0" />
-                <span>نظام RSVP لتأكيد الحضور فوراً عبر الواتساب</span>
+                <span>{t.pricing.diamantF2}</span>
               </li>
               <li className="flex items-start gap-3 text-sm text-[var(--color-ink)] font-bold">
                 <CheckCircle2 className="w-5 h-5 text-[var(--color-coral)] shrink-0" />
-                <span>دفتر تهاني وتبريكات رقمي حصري</span>
+                <span>{t.pricing.diamantF3}</span>
               </li>
               <li className="flex items-start gap-3 text-sm text-[var(--color-ink)] font-bold">
                 <CheckCircle2 className="w-5 h-5 text-[var(--color-coral)] shrink-0" />
-                <span>مؤثرات موسيقية سينمائية / مالوف تونسي</span>
+                <span>{t.pricing.diamantF4}</span>
               </li>
               <li className="flex items-start gap-3 text-sm text-[var(--color-ink)] font-bold">
                 <CheckCircle2 className="w-5 h-5 text-[var(--color-coral)] shrink-0" />
-                <span>معرض صور عالي الدقة للعروسين</span>
+                <span>{t.pricing.diamantF5}</span>
               </li>
             </ul>
 
             <Link href="/editor?plan=diamant" className="btn w-full py-4.5 bg-[var(--color-coral)] text-white shadow-lg hover:shadow-xl rounded-2xl font-extrabold text-lg text-center block hover:scale-[1.03] transition-all cursor-pointer">
-              احجز الباقة الماسية ✨
+              {t.pricing.diamantCta}
             </Link>
           </div>
         </div>
@@ -144,37 +147,37 @@ export default function Pricing() {
               <ShieldCheck className="w-6 h-6 text-[var(--color-coral)]" />
             </div>
             <h3 className="relative z-10 text-2xl font-bold text-[var(--color-ink)] mb-2" style={{ fontFamily: "var(--font-amiri)" }}>
-              باقة رويال
+              {t.pricing.royaleName}
             </h3>
-            <p className="relative z-10 text-sm text-[var(--color-muted)] font-semibold mb-6">تصميم مخصص وحصري بالكامل</p>
+            <p className="relative z-10 text-sm text-[var(--color-muted)] font-semibold mb-6">{t.pricing.royaleTagline}</p>
             <div className="relative z-10 text-5xl font-extrabold text-[var(--color-ink)] drop-shadow-sm" style={{ fontFamily: "var(--font-display)" }}>
-              149 <span className="text-xl font-bold text-[var(--color-muted)]">د.ت</span>
+              149 <span className="text-xl font-bold text-[var(--color-muted)]">{t.pricing.currency}</span>
             </div>
-            <span className="relative z-10 text-xs text-[var(--color-muted)] font-bold block mt-2">دفعة واحدة ملمومة</span>
+            <span className="relative z-10 text-xs text-[var(--color-muted)] font-bold block mt-2">{t.pricing.oneOff}</span>
           </div>
 
           <div className="p-8 flex flex-col flex-1 justify-between">
             <ul className="space-y-4 mb-8">
               <li className="flex items-start gap-3 text-sm text-[var(--color-muted)] font-semibold group-hover:text-[var(--color-ink)] transition-colors">
                 <CheckCircle2 className="w-5 h-5 text-[var(--color-coral)] shrink-0" />
-                <span>كافة مميزات الباقة الماسية</span>
+                <span>{t.pricing.royaleF1}</span>
               </li>
               <li className="flex items-start gap-3 text-sm text-[var(--color-muted)] font-semibold group-hover:text-[var(--color-ink)] transition-colors">
                 <CheckCircle2 className="w-5 h-5 text-[var(--color-coral)] shrink-0" />
-                <span>رموز QR مشفرة لكل ضيف لدخول القاعة</span>
+                <span>{t.pricing.royaleF2}</span>
               </li>
               <li className="flex items-start gap-3 text-sm text-[var(--color-muted)] font-semibold group-hover:text-[var(--color-ink)] transition-colors">
                 <CheckCircle2 className="w-5 h-5 text-[var(--color-coral)] shrink-0" />
-                <span>تعديلات لا محدودة ومفتوحة للتصميم</span>
+                <span>{t.pricing.royaleF3}</span>
               </li>
               <li className="flex items-start gap-3 text-sm text-[var(--color-muted)] font-semibold group-hover:text-[var(--color-ink)] transition-colors">
                 <CheckCircle2 className="w-5 h-5 text-[var(--color-coral)] shrink-0" />
-                <span>مساعد شخصي على الواتساب 24/7</span>
+                <span>{t.pricing.royaleF4}</span>
               </li>
             </ul>
 
             <Link href="/editor?plan=royale" className="btn w-full py-4 bg-white text-[var(--color-coral)] border border-[var(--color-coral)] hover:bg-[var(--color-coral)] hover:text-white shadow-sm hover:shadow-md rounded-2xl font-bold text-center block transition-all cursor-pointer">
-              اطلب باقة رويال
+              {t.pricing.royaleCta}
             </Link>
           </div>
         </div>

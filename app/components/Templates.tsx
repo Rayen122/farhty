@@ -5,26 +5,29 @@ import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { Diamond, ArrowLeft, Play, Crown } from "lucide-react";
 import { templates as allTemplates, Template } from "../templates/data";
+import { useT } from "./LocaleProvider";
 
 export default function Templates() {
   const router = useRouter();
+  const t = useT();
   const [activeCategory, setActiveCategory] = useState("all");
   const trackRef = useRef<HTMLDivElement>(null);
   const [activeSlide, setActiveSlide] = useState(0);
 
   const categories = [
-    { id: "all", label: "المجموعة الكاملة" },
-    { id: "royal", label: "القصور الملكية" },
-    { id: "envelope", label: "أختام الشمع" },
-    { id: "tunisian", label: "التراث الأصيل" },
-    { id: "floral", label: "الورود والشموع" },
+    { id: "all", label: t.templates.catAll },
+    { id: "royal", label: t.templates.catRoyal },
+    { id: "envelope", label: t.templates.catEnvelope },
+    { id: "tunisian", label: t.templates.catTunisian },
+    { id: "floral", label: t.templates.catFloral },
   ];
 
-  const filteredTemplates = allTemplates.filter((t) => {
-    if (activeCategory === "royal") return t.slug.includes("porte-chateau") || t.slug.includes("imperiale") || t.slug.includes("cristal") || t.slug.includes("joie") || t.category.includes("الملكي") || t.category.includes("Prestige");
-    if (activeCategory === "envelope") return t.slug.includes("lettre") || t.slug.includes("parchemin") || t.slug.includes("amour");
-    if (activeCategory === "tunisian") return t.category.includes("تونس") || t.category.includes("Traditionnel") || t.slug.includes("jasmin") || t.slug.includes("oasis") || t.slug.includes("tunisian");
-    if (activeCategory === "floral") return t.slug.includes("jardin") || t.slug.includes("lanternes");
+  /* `tpl` et non `t` : `t` porte déjà les traductions dans ce composant. */
+  const filteredTemplates = allTemplates.filter((tpl) => {
+    if (activeCategory === "royal") return tpl.slug.includes("porte-chateau") || tpl.slug.includes("emeraude") || tpl.slug.includes("imperiale") || tpl.slug.includes("cristal") || tpl.slug.includes("joie") || tpl.category.includes("الملكي") || tpl.category.includes("Prestige");
+    if (activeCategory === "envelope") return tpl.slug.includes("lettre") || tpl.slug.includes("parchemin") || tpl.slug.includes("amour") || tpl.slug.includes("emeraude");
+    if (activeCategory === "tunisian") return tpl.category.includes("تونس") || tpl.category.includes("Traditionnel") || tpl.slug.includes("jasmin") || tpl.slug.includes("oasis") || tpl.slug.includes("tunisian");
+    if (activeCategory === "floral") return tpl.slug.includes("jardin") || tpl.slug.includes("lanternes");
     return true;
   });
 
@@ -65,7 +68,7 @@ export default function Templates() {
   };
 
   return (
-    <section id="templates" className="relative bg-[var(--color-cream)] py-24" dir="rtl">
+    <section id="templates" className="relative bg-[var(--color-cream)] py-24">
       {/* Ambient background glows */}
       <div className="absolute top-0 left-0 w-full h-[500px] bg-gradient-to-b from-[var(--color-velvet)] to-transparent pointer-events-none" />
       <div className="absolute right-0 top-1/4 w-[500px] h-[500px] bg-[var(--color-velvet)] blur-[150px] rounded-full pointer-events-none" />
@@ -75,16 +78,16 @@ export default function Templates() {
         <div className="text-center max-w-3xl mx-auto mb-16">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white border border-[var(--color-line)] text-[var(--color-coral)] font-bold text-xs mb-4 shadow-sm">
             <Crown className="w-3.5 h-3.5" />
-            <span className="tracking-widest uppercase">The Collection</span>
+            <span className="tracking-widest uppercase">{t.templates.eyebrow}</span>
           </div>
           <h2
             className="text-4xl sm:text-6xl font-extrabold text-[var(--color-ink)] mb-4"
             style={{ fontFamily: "var(--font-display)" }}
           >
-            روائع التصاميم الفاخرة
+            {t.templates.title}
           </h2>
           <p className="text-[var(--color-muted)] text-base sm:text-lg font-semibold max-w-2xl mx-auto">
-            انتقِ التصميم الذي يعبّر عن فخامة مناسبتك. كل دعوة هي تحفة فنية تنبض بالحياة، الموسيقى، والتفاصيل السينمائية.
+            {t.templates.subtitle}
           </p>
         </div>
 
@@ -129,7 +132,7 @@ export default function Templates() {
               <button
                 key={item.id}
                 onClick={() => goToSlide(i)}
-                aria-label={`الانتقال إلى التصميم ${i + 1}`}
+                aria-label={`${t.templates.goToSlide} ${i + 1}`}
                 aria-current={i === activeSlide}
                 className={`h-2 rounded-full transition-all ${
                   i === activeSlide
@@ -147,6 +150,7 @@ export default function Templates() {
 
 function TemplateCard({ item, onSelect }: { item: Template; onSelect: (slug: string) => void }) {
   const router = useRouter();
+  const t = useT();
 
   return (
     <motion.div
@@ -180,7 +184,7 @@ function TemplateCard({ item, onSelect }: { item: Template; onSelect: (slug: str
             e.stopPropagation();
             onSelect(item.slug);
           }}
-          aria-label={`معاينة ${item.name}`}
+          aria-label={`${t.templates.previewOf} ${item.name}`}
           className="pointer-events-auto w-16 h-16 rounded-full bg-white/90 backdrop-blur-md flex items-center justify-center text-[var(--color-coral)] shadow-2xl scale-90 transition-transform duration-300 hover:bg-white group-hover:scale-100 cursor-pointer"
         >
           <Play className="w-6 h-6 fill-[var(--color-coral)] ml-1" />
@@ -210,7 +214,7 @@ function TemplateCard({ item, onSelect }: { item: Template; onSelect: (slug: str
             className="w-full py-2.5 px-3 bg-[var(--color-coral)] hover:bg-[#8B0A1A] text-white rounded-xl font-extrabold text-xs flex items-center justify-center gap-1.5 shadow-md hover:shadow-lg transition-all cursor-pointer"
           >
             <Crown className="w-3.5 h-3.5" />
-            <span>تعديل الدعوة</span>
+            <span>{t.templates.edit}</span>
           </button>
 
           <button
@@ -221,7 +225,7 @@ function TemplateCard({ item, onSelect }: { item: Template; onSelect: (slug: str
             className="w-full py-2.5 px-3 bg-white/20 hover:bg-white/30 backdrop-blur-md text-white rounded-xl font-bold text-xs flex items-center justify-center gap-1.5 border border-white/30 transition-all cursor-pointer"
           >
             <Play className="w-3.5 h-3.5 fill-white" />
-            <span>معاينة</span>
+            <span>{t.templates.preview}</span>
           </button>
         </div>
       </div>

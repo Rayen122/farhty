@@ -1,13 +1,19 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Sparkles, Diamond, ArrowLeft, Star, Heart } from "lucide-react";
+import { Sparkles, Diamond, ArrowLeft, ArrowRight, Star, Heart } from "lucide-react";
 import Image from "next/image";
+import { useLocale } from "./LocaleProvider";
 
 export default function Hero() {
+  const { t, locale } = useLocale();
+
+  /* « Suivant » pointe vers la gauche en arabe et vers la droite en français. */
+  const Forward = locale === "fr" ? ArrowRight : ArrowLeft;
+
   return (
     <>
-      <section className="relative min-h-[100vh] flex flex-col justify-center overflow-hidden bg-[var(--color-cream)] pt-24 pb-16" dir="rtl">
+      <section className="relative min-h-[100vh] flex flex-col justify-center overflow-hidden bg-[var(--color-cream)] pt-24 pb-16">
         {/* Ambient Glows */}
         <div className="absolute inset-0 z-0">
           <div className="absolute top-0 right-0 w-[50vw] h-[50vh] bg-[#FDF5F8] blur-[100px] rounded-bl-full pointer-events-none" />
@@ -24,7 +30,7 @@ export default function Hero() {
               className="inline-flex items-center gap-2 px-4 sm:px-5 py-2 rounded-full bg-white border border-[var(--color-line)] text-xs sm:text-sm font-bold text-[var(--color-coral)] mb-6 shadow-sm"
             >
               <Heart className="w-4 h-4 text-[var(--color-coral)] fill-[var(--color-coral)]" />
-              <span className="tracking-wide">تصاميم حصرية للزفاف الراقي</span>
+              <span className="tracking-wide">{t.hero.badge}</span>
             </motion.div>
 
             <motion.h1
@@ -34,9 +40,9 @@ export default function Hero() {
               className="text-4xl sm:text-6xl md:text-7xl font-extrabold text-[var(--color-ink)] leading-[1.2] mb-6 tracking-tight"
               style={{ fontFamily: "var(--font-display)" }}
             >
-              دعوة زفافك، <br />
+              {t.hero.titleLine1} <br />
               <span className="text-transparent bg-clip-text bg-gradient-to-l from-[var(--color-coral)] to-[#B5952F]">
-                تُحفة فنية خالدة
+                {t.hero.titleLine2}
               </span>
             </motion.h1>
 
@@ -46,7 +52,7 @@ export default function Hero() {
               transition={{ duration: 0.8, delay: 0.6 }}
               className="text-[var(--color-muted)] max-w-lg mb-10 text-base sm:text-xl leading-relaxed font-semibold px-4 sm:px-0"
             >
-              دعوات رقمية تفاعلية بلمسة كلاسيكية فاخرة. ابهر ضيوفك بتجربة بصرية لا تُنسى، وتأكيد حضور حصري يليق بليلة العمر.
+              {t.hero.subtitle}
             </motion.p>
 
             <motion.div
@@ -67,7 +73,7 @@ export default function Hero() {
                 className="w-full sm:w-auto px-6 sm:px-8 py-3.5 sm:py-4 bg-[var(--color-coral)] text-white rounded-full font-bold text-base sm:text-lg flex items-center justify-center gap-3 shadow-[0_10px_20px_rgba(139,10,26,0.2)] hover:shadow-[0_15px_25px_rgba(139,10,26,0.3)] hover:-translate-y-1 transition-all cursor-pointer"
               >
                 <Sparkles className="w-5 h-5" />
-                <span>استكشف المجموعة الفاخرة</span>
+                <span>{t.hero.ctaPrimary}</span>
               </a>
               <a
                 href="#pricing"
@@ -80,8 +86,8 @@ export default function Hero() {
                 }}
                 className="w-full sm:w-auto px-6 sm:px-8 py-3.5 sm:py-4 bg-white border border-[var(--color-line)] text-[var(--color-ink)] hover:border-[var(--color-coral)] hover:text-[var(--color-coral)] rounded-full font-bold text-base sm:text-lg flex items-center justify-center gap-3 transition-all cursor-pointer shadow-sm"
               >
-                <span>اكتشف الباقات</span>
-                <ArrowLeft className="w-5 h-5" />
+                <span>{t.hero.ctaSecondary}</span>
+                <Forward className="w-5 h-5" />
               </a>
             </motion.div>
           </div>
@@ -163,21 +169,21 @@ export default function Hero() {
               className="hidden sm:flex absolute bottom-[15%] sm:bottom-[10%] -right-6 sm:right-0 lg:-right-4 z-20 bg-white rounded-2xl shadow-xl border border-[var(--color-line)] py-3 px-5 flex-col text-left scale-90 sm:scale-100"
             >
               <span className="text-xs font-semibold text-[var(--color-muted)] mb-1">Your invite link</span>
-              <span className="text-sm font-bold text-[var(--color-ink)] font-mono">farhty.tn/<span className="text-[var(--color-coral)]">v&s</span></span>
+              <span className="text-sm font-bold text-[var(--color-ink)] font-mono">farhty.me/<span className="text-[var(--color-coral)]">v&s</span></span>
             </motion.div>
           </motion.div>
         </div>
       </section>
 
       {/* Trust Stats Strip - Light Mode Revert */}
-      <section className="relative z-30 -mt-10 sm:-mt-12 container-x pb-20" dir="rtl">
+      <section className="relative z-30 -mt-10 sm:-mt-12 container-x pb-20">
         <div className="bg-white/90 backdrop-blur-xl border border-[var(--color-line)] rounded-[24px] sm:rounded-[32px] shadow-lg sm:shadow-xl p-6 sm:p-8 grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8 text-center divide-y sm:divide-y-0 sm:divide-x sm:divide-x-reverse divide-[var(--color-line)] relative overflow-hidden">
           <div className="flex flex-col items-center justify-center pt-2 sm:pt-0">
             <div className="flex items-center gap-2 text-[var(--color-coral)] font-extrabold text-3xl sm:text-4xl mb-2" style={{ fontFamily: "var(--font-display)" }}>
               <Diamond className="w-6 h-6 sm:w-8 sm:h-8 text-[var(--color-coral)]" />
               <span>+1,200</span>
             </div>
-            <span className="text-sm sm:text-base text-[var(--color-muted)] font-semibold">حفل زفاف راقي</span>
+            <span className="text-sm sm:text-base text-[var(--color-muted)] font-semibold">{t.hero.statWeddings}</span>
           </div>
 
           <div className="flex flex-col items-center justify-center pt-6 sm:pt-0">
@@ -185,7 +191,7 @@ export default function Hero() {
               <Star className="w-6 h-6 sm:w-8 sm:h-8 fill-[var(--color-gold)] text-[var(--color-gold)]" />
               <span>4.98</span>
             </div>
-            <span className="text-sm sm:text-base text-[var(--color-muted)] font-semibold">تقييم النخبة</span>
+            <span className="text-sm sm:text-base text-[var(--color-muted)] font-semibold">{t.hero.statRating}</span>
           </div>
 
           <div className="flex flex-col items-center justify-center pt-6 sm:pt-0">
@@ -193,7 +199,7 @@ export default function Hero() {
               <Sparkles className="w-6 h-6 sm:w-8 sm:h-8 text-[var(--color-coral)]" />
               <span>VIP</span>
             </div>
-            <span className="text-sm sm:text-base text-[var(--color-muted)] font-semibold">تأكيد حضور حصري</span>
+            <span className="text-sm sm:text-base text-[var(--color-muted)] font-semibold">{t.hero.statRsvp}</span>
           </div>
         </div>
       </section>

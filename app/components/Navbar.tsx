@@ -4,9 +4,11 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, Sparkles, Diamond } from "lucide-react";
 import Link from "next/link";
+import { useT } from "./LocaleProvider";
 
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const t = useT();
 
   const handleAnchorClick = (e: React.MouseEvent<HTMLAnchorElement>, targetId: string) => {
     const el = document.getElementById(targetId);
@@ -17,7 +19,7 @@ export default function Navbar() {
   };
 
   return (
-    <header className="fixed top-4 left-0 right-0 z-50 px-4 md:px-8" dir="rtl">
+    <header className="fixed top-4 left-0 right-0 z-50 px-4 md:px-8">
       <div className="max-w-5xl mx-auto rounded-full bg-white/90 backdrop-blur-xl border border-[var(--color-line)] shadow-lg shadow-[#8B0A1A]/5 flex items-center justify-between h-[72px] px-6">
         
         {/* Brand Logo */}
@@ -34,24 +36,24 @@ export default function Navbar() {
             onClick={(e) => handleAnchorClick(e, "templates")}
             className="text-[var(--color-muted)] text-sm font-bold hover:text-[var(--color-coral)] transition-colors cursor-pointer"
           >
-            المجموعة الفاخرة
+            {t.nav.collection}
           </a>
           <a
             href="/#features"
             onClick={(e) => handleAnchorClick(e, "features")}
             className="text-[var(--color-muted)] text-sm font-bold hover:text-[var(--color-coral)] transition-colors cursor-pointer"
           >
-            المميزات
+            {t.nav.features}
           </a>
           <a
             href="/#pricing"
             onClick={(e) => handleAnchorClick(e, "pricing")}
             className="text-[var(--color-muted)] text-sm font-bold hover:text-[var(--color-coral)] transition-colors cursor-pointer"
           >
-            الباقات
+            {t.nav.pricing}
           </a>
           <Link href="/editor" className="text-[var(--color-muted)] text-sm font-bold hover:text-[var(--color-coral)] transition-colors cursor-pointer flex items-center gap-1">
-            <span>المحرر</span>
+            <span>{t.nav.editor}</span>
           </Link>
 
           <div className="w-[1px] h-5 bg-[var(--color-line)]"></div>
@@ -63,7 +65,7 @@ export default function Navbar() {
             className="px-5 py-2.5 bg-transparent text-[var(--color-coral)] border border-[var(--color-coral)] hover:bg-[var(--color-coral)] hover:text-white transition-all rounded-full font-bold flex items-center gap-2 cursor-pointer shadow-sm"
           >
             <Diamond className="w-3.5 h-3.5" />
-            <span className="text-sm">اصنع دعوتك الآن</span>
+            <span className="text-sm">{t.nav.cta}</span>
           </a>
         </nav>
 
@@ -72,7 +74,7 @@ export default function Navbar() {
           <button
             onClick={() => setMobileOpen(!mobileOpen)}
             className="w-10 h-10 flex items-center justify-center rounded-full bg-[var(--color-cream)] border border-[var(--color-line)] text-[var(--color-ink)] cursor-pointer"
-            aria-label="القائمة"
+            aria-label={t.nav.menu}
           >
             {mobileOpen ? <X size={20} /> : <Menu size={20} />}
           </button>
@@ -96,7 +98,7 @@ export default function Navbar() {
               }}
               className="text-base font-bold text-[var(--color-ink)] py-3 border-b border-[var(--color-line-soft)] cursor-pointer flex items-center justify-between"
             >
-              المجموعة الفاخرة
+              {t.nav.collection}
             </a>
             <a
               href="/#features"
@@ -106,7 +108,7 @@ export default function Navbar() {
               }}
               className="text-base font-bold text-[var(--color-ink)] py-3 border-b border-[var(--color-line-soft)] cursor-pointer"
             >
-              المميزات
+              {t.nav.features}
             </a>
             <a
               href="/#pricing"
@@ -116,14 +118,14 @@ export default function Navbar() {
               }}
               className="text-base font-bold text-[var(--color-ink)] py-3 border-b border-[var(--color-line-soft)] cursor-pointer"
             >
-              الباقات
+              {t.nav.pricing}
             </a>
             <Link
               href="/editor"
               onClick={() => setMobileOpen(false)}
               className="text-base font-bold text-[var(--color-ink)] py-3 border-b border-[var(--color-line-soft)] cursor-pointer"
             >
-              المحرر (تعديل الدعوة)
+              {t.nav.editorLong}
             </Link>
 
             <a
@@ -135,7 +137,7 @@ export default function Navbar() {
               className="mt-4 py-4 bg-[var(--color-coral)] text-white rounded-xl font-bold flex items-center justify-center gap-2 cursor-pointer shadow-lg"
             >
               <Diamond className="w-4 h-4" />
-              <span>اصنع دعوتك الآن</span>
+              <span>{t.nav.cta}</span>
             </a>
           </motion.div>
         )}
