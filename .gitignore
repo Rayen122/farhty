@@ -46,3 +46,6 @@ next-env.d.ts
 
 # python venv (outils locaux)
 venv/
+
+# enregistrements bruts (sources des voix)
+.voix-sources/
