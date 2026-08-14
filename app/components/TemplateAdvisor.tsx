@@ -9,6 +9,8 @@ import { useLocale } from "./LocaleProvider";
 
 type Answer = { questionId: string; optionId: string; tags: AdvisorTag[] };
 
+const HINT_SESSION_KEY = "farhty-advisor-hint";
+
 /**
  * Conseiller de modèles présenté comme une conversation.
  *
@@ -21,7 +23,34 @@ export default function TemplateAdvisor() {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [answers, setAnswers] = useState<Answer[]>([]);
+  const [hintShown, setHintShown] = useState(false);
+  const [hovering, setHovering] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
+
+  /* L'accroche se montre d'elle-même une fois par session : sur mobile il n'y a
+     pas de survol, et sans elle le bouton n'est qu'une icône sans explication. */
+  useEffect(() => {
+    let dejaVue = false;
+    try {
+      dejaVue = sessionStorage.getItem(HINT_SESSION_KEY) === "1";
+    } catch {
+      /* stockage bloqué : l'accroche s'affichera à chaque visite, sans gravité */
+    }
+    if (dejaVue) return;
+
+    const apparition = setTimeout(() => {
+      setHintShown(true);
+      try {
+        sessionStorage.setItem(HINT_SESSION_KEY, "1");
+      } catch {}
+    }, 4000);
+    const disparition = setTimeout(() => setHintShown(false), 11000);
+
+    return () => {
+      clearTimeout(apparition);
+      clearTimeout(disparition);
+    };
+  }, []);
 
   const step = answers.length;
   const current = ADVISOR_QUESTIONS[step];
@@ -49,14 +78,40 @@ export default function TemplateAdvisor() {
     <>
       {/* Lanceur — à gauche et remonté sur mobile pour ne pas heurter la barre
           d'appel à l'action, qui occupe déjà le bas de l'écran. */}
-      <button
-        onClick={() => setOpen(true)}
-        aria-label={t.advisor.launcher}
-        className="fixed left-4 bottom-28 md:bottom-6 z-[90] flex items-center gap-2 rounded-full bg-[var(--color-coral)] text-white pl-4 pr-5 py-3 shadow-[0_10px_30px_rgba(139,10,26,0.35)] hover:-translate-y-0.5 transition-transform cursor-pointer"
+      <div
+        className="fixed left-4 bottom-28 md:bottom-6 z-[90] flex items-end gap-2"
+        onMouseEnter={() => setHovering(true)}
+        onMouseLeave={() => setHovering(false)}
       >
-        <MessageCircleHeart className="w-5 h-5" />
-        <span className="text-sm font-extrabold hidden sm:inline">{t.advisor.launcher}</span>
-      </button>
+        <button
+          onClick={() => setOpen(true)}
+          aria-label={t.advisor.launcher}
+          aria-describedby="advisor-teaser"
+          className="shrink-0 flex items-center gap-2 rounded-full bg-[var(--color-coral)] text-white pl-4 pr-5 py-3 shadow-[0_10px_30px_rgba(139,10,26,0.35)] hover:-translate-y-0.5 transition-transform cursor-pointer"
+        >
+          <MessageCircleHeart className="w-5 h-5" />
+          <span className="text-sm font-extrabold hidden sm:inline">{t.advisor.launcher}</span>
+        </button>
+
+        <AnimatePresence>
+          {(hovering || hintShown) && !open && (
+            <motion.p
+              id="advisor-teaser"
+              role="status"
+              initial={{ opacity: 0, x: -8, scale: 0.96 }}
+              animate={{ opacity: 1, x: 0, scale: 1 }}
+              exit={{ opacity: 0, x: -8, scale: 0.96 }}
+              transition={{ duration: 0.22, ease: "easeOut" }}
+              dir={locale === "fr" ? "ltr" : "rtl"}
+              /* Toujours à droite du bouton : celui-ci est ancré à gauche de
+                 l'écran dans les deux sens de lecture. */
+              className="max-w-[62vw] sm:max-w-xs rounded-2xl rounded-bl-md bg-white border border-[var(--color-line)] px-4 py-2.5 text-xs sm:text-sm font-bold text-[var(--color-ink)] shadow-xl"
+            >
+              {t.advisor.teaser}
+            </motion.p>
+          )}
+        </AnimatePresence>
+      </div>
 
       <AnimatePresence>
         {open && (
