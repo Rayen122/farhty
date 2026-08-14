@@ -49,3 +49,6 @@ venv/
 
 # enregistrements bruts (sources des voix)
 .voix-sources/
+
+# essais de traitement audio (jetables)
+voix-essais/
