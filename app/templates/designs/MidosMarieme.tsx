@@ -156,6 +156,58 @@ function TopWash() {
   );
 }
 
+/**
+ * Le lama, réduit à son trait — la marque du modèle.
+ *
+ * Les proportions font tout : encolure haute et fine, tête petite, corps
+ * compact, pattes élancées. C'est ce qui distingue un lama d'un quadrupède
+ * générique.
+ */
+function LlamaMark({ className = "", size = 46 }: { className?: string; size?: number }) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 48 48"
+      className={className}
+      fill="none"
+      stroke={OLIVE}
+      strokeWidth="1.25"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden
+    >
+      {/* Oreilles, dressées et pointues */}
+      <path d="M15.4 8.6 L14.6 3.4 L18.4 7.2" />
+      <path d="M20.6 7.1 L22.6 2.6 L23.4 7.8" />
+
+      {/* Tête : museau court, front droit */}
+      <path d="M15.2 8.8 C 12.6 10.4, 12.2 13.6, 13.6 15.4 C 14.6 16.7, 16.4 16.9, 17.8 16.2" />
+      <path d="M23.2 7.6 C 24.6 9.8, 24.8 12.8, 23.6 15" />
+      <path d="M13.6 15.4 C 12.2 16.2, 11.6 17.6, 12.4 18.4 C 13.2 19.2, 14.6 18.8, 15.2 17.8" />
+
+      {/* Encolure : la ligne la plus caractéristique */}
+      <path d="M17.8 16.2 C 19.4 19.8, 20.4 24.4, 20.8 28.2" />
+      <path d="M23.6 15 C 25.2 19.4, 26 24, 26.2 27.8" />
+
+      {/* Corps */}
+      <path d="M20.8 28.2 C 22.6 26.4, 26 25.6, 30 25.8 L34.6 26.2 C 38.4 26.6, 40.4 28.8, 40.2 32 C 40 35, 38 36.4, 35 36.4 L24.4 36.4 C 21.6 36.4, 20.4 34.6, 20.6 32 Z" />
+
+      {/* Queue, courte et relevée */}
+      <path d="M40 28.6 C 42.2 27.4, 43.4 28.4, 43 30.2" />
+
+      {/* Pattes */}
+      <path d="M24.4 36.4 L23.8 44.4" />
+      <path d="M28.6 36.4 L28.4 44.4" />
+      <path d="M34 36.4 L34.4 44.4" />
+      <path d="M37.8 36.2 L38.6 44.4" />
+
+      {/* Œil */}
+      <circle cx="16.4" cy="12.2" r="0.75" fill={OLIVE} stroke="none" />
+    </svg>
+  );
+}
+
 /** Filet séparateur : un trait fin et un losange, rien de plus. */
 function Rule() {
   return (
@@ -181,6 +233,9 @@ export default function MidosMaryeem({ template }: { template: Template }) {
   const [phase, setPhase] = useState<"video" | "arch" | "card">("video");
   const [soundOn, setSoundOn] = useState(false);
   const [rsvp, setRsvp] = useState<null | "yes" | "no">(null);
+  const [guestName, setGuestName] = useState("");
+  const [seats, setSeats] = useState(2);
+  const [attending, setAttending] = useState(true);
   const [countdown, setCountdown] = useState({ days: 0, hours: 0, minutes: 0 });
   const t = template.previewText;
 
@@ -259,7 +314,7 @@ export default function MidosMaryeem({ template }: { template: Template }) {
                 className="mb-4 text-[10px] uppercase text-white/65"
                 style={{ ...serif, letterSpacing: "0.4em" }}
               >
-                It will always be you
+                Ce sera toujours toi
               </motion.p>
               <motion.p
                 initial={{ opacity: 0, y: 14 }}
@@ -268,7 +323,7 @@ export default function MidosMaryeem({ template }: { template: Template }) {
                 className="mb-9 text-white"
                 style={{ ...script, fontSize: "clamp(2.75rem,11vw,4.5rem)", lineHeight: 1.05 }}
               >
-                {t.groom} <span style={{ ...serif, fontSize: "0.42em", letterSpacing: "0.2em" }}>and</span> {t.bride}
+                {t.groom} <span style={{ ...serif, fontSize: "0.42em", letterSpacing: "0.2em" }}>et</span> {t.bride}
               </motion.p>
               <motion.button
                 initial={{ opacity: 0 }}
@@ -293,76 +348,75 @@ export default function MidosMaryeem({ template }: { template: Template }) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: reduceMotion ? 0 : 0.7 }}
-            className="fixed inset-0 z-[95] flex items-center justify-center px-5 py-8"
-            style={{ background: "rgba(28,24,18,0.55)", backdropFilter: "blur(6px)" }}
+            transition={{ duration: reduceMotion ? 0 : 0.6 }}
+            className="fixed inset-0 z-[95] overflow-hidden"
+            style={{ background: "rgba(24,32,18,0.55)", backdropFilter: "blur(5px)" }}
           >
             <motion.div
-              initial={{ opacity: 0, y: 34, scale: 0.97 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: 18 }}
-              transition={{ duration: reduceMotion ? 0 : 0.75, ease: [0.22, 1, 0.36, 1] }}
+              /* Elle monte du bas, comme le rideau d'une salle — même geste que
+                 Jasmin. Ancrée en bas plutôt que centrée : c'est ce qui empêche
+                 le contenu de déborder de l'arche sur les petits écrans. */
+              initial={{ y: "100%", opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: "20%", opacity: 0 }}
+              transition={{ duration: reduceMotion ? 0 : 1, ease: [0.16, 1, 0.3, 1] }}
               role="dialog"
               aria-modal="true"
               aria-label="Invitation"
-              className="relative flex max-h-full w-full max-w-[380px] flex-col items-center overflow-y-auto px-8 py-12 text-center shadow-[0_30px_70px_-30px_rgba(28,24,18,0.8)]"
-              /* L'arche : plein cintre en haut, base droite — la forme des
-                 faire-part gravés, et celle du portail d'une salle. */
-              style={{ backgroundColor: PAPER, borderRadius: "190px 190px 18px 18px" }}
               dir="ltr"
+              className="absolute inset-x-4 bottom-0 top-20 flex flex-col items-center justify-between overflow-y-auto rounded-t-full border-x-8 border-t-8 px-8 py-10 text-center shadow-[0_-24px_60px_rgba(20,28,14,0.5)] sm:inset-x-auto sm:left-1/2 sm:w-[420px] sm:-translate-x-1/2"
+              style={{ backgroundColor: PAPER, borderColor: "rgba(255,255,255,0.55)" }}
             >
               {/* Filet intérieur qui redouble l'arche */}
               <span
-                className="pointer-events-none absolute inset-3 border"
-                style={{ borderColor: SAND, opacity: 0.4, borderRadius: "178px 178px 12px 12px" }}
+                className="pointer-events-none absolute inset-3 rounded-b-lg rounded-t-full border"
+                style={{ borderColor: SAND, opacity: 0.45 }}
                 aria-hidden
               />
 
-              <svg width="34" height="40" viewBox="0 0 34 40" className="relative mb-6" aria-hidden>
-                <g fill="none" stroke={OLIVE} strokeWidth="1.4">
-                  <circle cx="12" cy="9" r="5" />
-                  <circle cx="22" cy="9" r="5" />
-                  <circle cx="17" cy="17" r="5" />
-                  <path d="M17 22 L17 38" strokeLinecap="round" />
-                  <path d="M17 30 C 10 30, 7 26, 6 22 C 12 22, 16 25, 17 30 Z" />
-                </g>
-              </svg>
+              <div className="relative mt-10 flex flex-col items-center">
+                <LlamaMark className="mb-6" />
 
-              <p className="relative mb-7 text-[10px] uppercase" style={{ ...serif, letterSpacing: "0.3em", color: INK, opacity: 0.65 }}>
-                Bismillah ar-Rahman ar-Rahim
-              </p>
+                <p className="text-[10px] uppercase" style={{ ...serif, letterSpacing: "0.28em", color: INK, opacity: 0.65 }}>
+                  Bismillah ar-Rahman ar-Rahim
+                </p>
+              </div>
 
-              <p className="relative" style={{ ...script, fontSize: "clamp(2.6rem,12vw,3.6rem)", lineHeight: 1.05, color: FOREST }}>
-                {t.groom}
-              </p>
-              <span className="relative my-1 text-2xl" style={{ ...serif, color: SAND }}>
-                &amp;
-              </span>
-              <p className="relative" style={{ ...script, fontSize: "clamp(2.6rem,12vw,3.6rem)", lineHeight: 1.05, color: FOREST }}>
-                {t.bride}
-              </p>
+              <div className="relative flex flex-col items-center">
+                <p style={{ ...script, fontSize: "clamp(2.4rem,11vw,3.4rem)", lineHeight: 1.08, color: FOREST }}>
+                  {t.groom}
+                </p>
+                <span className="my-1 text-2xl" style={{ ...serif, color: SAND }}>
+                  &amp;
+                </span>
+                <p style={{ ...script, fontSize: "clamp(2.4rem,11vw,3.4rem)", lineHeight: 1.08, color: FOREST }}>
+                  {t.bride}
+                </p>
 
-              <span className="relative my-7 h-px w-24" style={{ background: SAND, opacity: 0.6 }} aria-hidden />
+                <span className="my-6 h-px w-24" style={{ background: SAND, opacity: 0.6 }} aria-hidden />
 
-              <p className="relative max-w-[26ch] text-[15px] leading-[1.7]" style={{ ...serif, color: INK, opacity: 0.85 }}>
-                Nous avons la grande joie de vous convier à la célébration de notre mariage.
-              </p>
+                <p className="max-w-[26ch] text-[15px] leading-[1.7]" style={{ ...serif, color: INK, opacity: 0.85 }}>
+                  Nous avons la grande joie de vous convier à la célébration de notre mariage.
+                </p>
+              </div>
 
-              <p className="relative mt-7 text-sm uppercase" style={{ ...serif, letterSpacing: "0.22em", color: FOREST }}>
-                {t.date}
-              </p>
-              <p className="relative mt-1 text-sm uppercase" style={{ ...serif, letterSpacing: "0.22em", color: FOREST, opacity: 0.75 }}>
-                {t.city}
-              </p>
+              <div className="relative flex flex-col items-center">
+                <p className="text-sm uppercase" style={{ ...serif, letterSpacing: "0.2em", color: FOREST }}>
+                  {t.date}
+                </p>
+                <p className="mt-1 text-sm uppercase" style={{ ...serif, letterSpacing: "0.2em", color: FOREST, opacity: 0.75 }}>
+                  {t.city}
+                </p>
 
-              <button
-                onClick={() => setPhase("card")}
-                className="relative mt-9 inline-flex min-h-11 cursor-pointer items-center gap-3 rounded-full px-9 text-[11px] uppercase text-white transition-colors duration-200 hover:brightness-110 focus-visible:outline-2 focus-visible:outline-offset-2"
-                style={{ ...serif, letterSpacing: "0.26em", backgroundColor: OLIVE, outlineColor: FOREST }}
-              >
-                <ArrowLeft size={14} className="rotate-180" aria-hidden />
-                Découvrir
-              </button>
+                <button
+                  onClick={() => setPhase("card")}
+                  className="group mt-7 mb-4 inline-flex min-h-11 cursor-pointer items-center gap-3 rounded-full px-9 text-[11px] uppercase text-white shadow-lg transition-colors duration-200 hover:brightness-110 focus-visible:outline-2 focus-visible:outline-offset-2"
+                  style={{ ...serif, letterSpacing: "0.24em", backgroundColor: OLIVE, outlineColor: FOREST }}
+                >
+                  Découvrir
+                  <ArrowLeft size={15} className="rotate-180 transition-transform group-hover:translate-x-1" aria-hidden />
+                </button>
+              </div>
             </motion.div>
           </motion.div>
         )}
@@ -381,7 +435,7 @@ export default function MidosMaryeem({ template }: { template: Template }) {
           >
             {t.groom}
             <span className="mx-3 align-middle" style={{ ...serif, fontSize: "0.26em", letterSpacing: "0.22em" }}>
-              and
+              et
             </span>
             {t.bride}
           </motion.p>
@@ -394,7 +448,7 @@ export default function MidosMaryeem({ template }: { template: Template }) {
           className="relative z-10 mt-8"
           dir="ltr"
         >
-          <Caps size="text-[11px] sm:text-xs">Invite you to their wedding</Caps>
+          <Caps size="text-[11px] sm:text-xs">Ont la joie de vous inviter à leur mariage</Caps>
 
           <div className="mt-7 flex items-center justify-center gap-3" style={{ ...serif }}>
             {dateParts.map((part, i) => (
@@ -416,7 +470,7 @@ export default function MidosMaryeem({ template }: { template: Template }) {
           </p>
 
           <p className="mt-6" style={{ ...script, fontSize: "1.5rem", color: OLIVE }}>
-            reception to follow
+            réception à suivre
           </p>
         </motion.div>
 
@@ -540,37 +594,113 @@ export default function MidosMaryeem({ template }: { template: Template }) {
         </a>
       </section>
 
-      {/* ═══ Confirmation ═══ */}
-      <section className="relative overflow-hidden px-8 pb-40 pt-20 text-center" style={{ backgroundColor: PAPER_WARM }}>
+      {/* ═══ Confirmation de présence ═══ */}
+      <section
+        className="relative overflow-hidden px-8 pb-44 pt-20 text-center"
+        style={{ background: `linear-gradient(180deg, ${PAPER_WARM}, ${WASH}33)` }}
+      >
+        <LlamaMark className="mx-auto mb-5" size={54} />
         <Caps className="opacity-70">Confirmez votre présence</Caps>
         <Rule />
 
         {rsvp === null ? (
-          <div className="flex flex-wrap items-center justify-center gap-3">
-            <button
-              onClick={() => setRsvp("yes")}
-              className="min-h-11 cursor-pointer rounded-full px-9 text-[11px] uppercase text-white shadow-sm transition-colors duration-200 hover:brightness-110 focus-visible:outline-2 focus-visible:outline-offset-2"
-              style={{ ...serif, letterSpacing: "0.26em", backgroundColor: FOREST, outlineColor: FOREST }}
-            >
-              Je serai là
-            </button>
-            <button
-              onClick={() => setRsvp("no")}
-              className="min-h-11 cursor-pointer rounded-full border bg-white/70 px-9 text-[11px] uppercase transition-colors duration-200 hover:bg-white focus-visible:outline-2 focus-visible:outline-offset-2"
-              style={{ ...serif, letterSpacing: "0.26em", borderColor: SAND, color: INK, outlineColor: OLIVE }}
-            >
-              Je ne pourrai pas
-            </button>
-          </div>
-        ) : (
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            style={{ ...script, fontSize: "2rem", color: FOREST }}
-            role="status"
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              setRsvp(attending ? "yes" : "no");
+            }}
+            className="mx-auto flex max-w-[22rem] flex-col gap-4 text-start"
           >
-            {rsvp === "yes" ? "Merci, nous vous attendons" : "Vous nous manquerez"}
-          </motion.p>
+            <label className="flex flex-col gap-1.5">
+              <span className="text-[11px] uppercase" style={{ ...serif, letterSpacing: "0.2em", color: INK, opacity: 0.7 }}>
+                Votre nom
+              </span>
+              <input
+                type="text"
+                name="guestName"
+                value={guestName}
+                onChange={(e) => setGuestName(e.target.value)}
+                required
+                autoComplete="name"
+                className="min-h-11 rounded-xl border bg-white/85 px-4 text-[15px] outline-none transition-colors focus:border-current"
+                style={{ ...serif, borderColor: SAND, color: INK }}
+              />
+            </label>
+
+            <label className="flex flex-col gap-1.5">
+              <span className="text-[11px] uppercase" style={{ ...serif, letterSpacing: "0.2em", color: INK, opacity: 0.7 }}>
+                Nombre de personnes
+              </span>
+              <input
+                type="number"
+                name="seats"
+                min={1}
+                max={10}
+                value={seats}
+                onChange={(e) => setSeats(Math.min(10, Math.max(1, Number(e.target.value) || 1)))}
+                className="min-h-11 rounded-xl border bg-white/85 px-4 text-[15px] outline-none transition-colors focus:border-current"
+                style={{ ...serif, borderColor: SAND, color: INK }}
+              />
+            </label>
+
+            {/* Deux boutons radio plutôt qu'une case : la réponse négative doit
+                être aussi facile à donner que la positive, sinon on ne l'a pas. */}
+            <fieldset className="mt-1">
+              <legend className="mb-2 text-[11px] uppercase" style={{ ...serif, letterSpacing: "0.2em", color: INK, opacity: 0.7 }}>
+                Serez-vous des nôtres ?
+              </legend>
+              <div className="flex gap-2">
+                {([[true, "Oui, avec joie"], [false, "Je ne pourrai pas"]] as const).map(([value, label]) => (
+                  <label
+                    key={label}
+                    className="flex-1 cursor-pointer rounded-full border px-4 py-3 text-center text-[11px] uppercase transition-colors duration-200"
+                    style={{
+                      ...serif,
+                      letterSpacing: "0.16em",
+                      borderColor: attending === value ? OLIVE : SAND,
+                      backgroundColor: attending === value ? OLIVE : "rgba(255,255,255,0.7)",
+                      color: attending === value ? "#FFFFFF" : INK,
+                    }}
+                  >
+                    <input
+                      type="radio"
+                      name="attending"
+                      className="sr-only"
+                      checked={attending === value}
+                      onChange={() => setAttending(value)}
+                    />
+                    {label}
+                  </label>
+                ))}
+              </div>
+            </fieldset>
+
+            <button
+              type="submit"
+              className="mt-3 min-h-11 cursor-pointer rounded-full px-9 text-[11px] uppercase text-white shadow-sm transition-colors duration-200 hover:brightness-110 focus-visible:outline-2 focus-visible:outline-offset-2"
+              style={{ ...serif, letterSpacing: "0.24em", backgroundColor: FOREST, outlineColor: FOREST }}
+            >
+              Envoyer ma réponse
+            </button>
+          </form>
+        ) : (
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} role="status">
+            <p style={{ ...script, fontSize: "2rem", color: FOREST }}>
+              {rsvp === "yes" ? "Merci, nous vous attendons" : "Vous nous manquerez"}
+            </p>
+            <p className="mt-2 text-sm" style={{ ...serif, color: INK, opacity: 0.75 }}>
+              {rsvp === "yes"
+                ? `${guestName} — ${seats} ${seats > 1 ? "personnes" : "personne"}`
+                : guestName}
+            </p>
+            <button
+              onClick={() => setRsvp(null)}
+              className="mt-6 min-h-11 cursor-pointer text-[11px] uppercase underline-offset-4 hover:underline"
+              style={{ ...serif, letterSpacing: "0.2em", color: OLIVE }}
+            >
+              Modifier ma réponse
+            </button>
+          </motion.div>
         )}
 
         <WatercolourLandscape className="pointer-events-none absolute inset-x-0 bottom-0 h-40 w-full opacity-70" />
