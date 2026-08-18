@@ -157,54 +157,30 @@ function TopWash() {
 }
 
 /**
- * Le lama, réduit à son trait — la marque du modèle.
+ * Le lama de la demande — l'illustration fournie par le couple.
  *
- * Les proportions font tout : encolure haute et fine, tête petite, corps
- * compact, pattes élancées. C'est ce qui distingue un lama d'un quadrupède
- * générique.
+ * Une image plutôt qu'un tracé : à cette échelle, le pelage, le tapis à
+ * motifs et le bouquet de muguet portent l'identité du modèle mieux que
+ * n'importe quelle silhouette vectorielle.
  */
-function LlamaMark({ className = "", size = 46 }: { className?: string; size?: number }) {
+function LlamaMark({ className = "", size = 88 }: { className?: string; size?: number }) {
+  /* Médaillon : le fond crème de l'illustration ne se fond jamais exactement
+     dans celui de la carte. Un cercle assumé vaut mieux qu'un rectangle qu'on
+     essaie de faire disparaître. */
   return (
-    <svg
-      width={size}
-      height={size}
-      viewBox="0 0 48 48"
-      className={className}
-      fill="none"
-      stroke={OLIVE}
-      strokeWidth="1.25"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden
+    <span
+      className={`relative inline-flex shrink-0 items-center justify-center overflow-hidden rounded-full ${className}`}
+      style={{ width: size, height: size, backgroundColor: "#FAF7F0", boxShadow: `inset 0 0 0 1px ${SAND}55` }}
     >
-      {/* Oreilles, dressées et pointues */}
-      <path d="M15.4 8.6 L14.6 3.4 L18.4 7.2" />
-      <path d="M20.6 7.1 L22.6 2.6 L23.4 7.8" />
-
-      {/* Tête : museau court, front droit */}
-      <path d="M15.2 8.8 C 12.6 10.4, 12.2 13.6, 13.6 15.4 C 14.6 16.7, 16.4 16.9, 17.8 16.2" />
-      <path d="M23.2 7.6 C 24.6 9.8, 24.8 12.8, 23.6 15" />
-      <path d="M13.6 15.4 C 12.2 16.2, 11.6 17.6, 12.4 18.4 C 13.2 19.2, 14.6 18.8, 15.2 17.8" />
-
-      {/* Encolure : la ligne la plus caractéristique */}
-      <path d="M17.8 16.2 C 19.4 19.8, 20.4 24.4, 20.8 28.2" />
-      <path d="M23.6 15 C 25.2 19.4, 26 24, 26.2 27.8" />
-
-      {/* Corps */}
-      <path d="M20.8 28.2 C 22.6 26.4, 26 25.6, 30 25.8 L34.6 26.2 C 38.4 26.6, 40.4 28.8, 40.2 32 C 40 35, 38 36.4, 35 36.4 L24.4 36.4 C 21.6 36.4, 20.4 34.6, 20.6 32 Z" />
-
-      {/* Queue, courte et relevée */}
-      <path d="M40 28.6 C 42.2 27.4, 43.4 28.4, 43 30.2" />
-
-      {/* Pattes */}
-      <path d="M24.4 36.4 L23.8 44.4" />
-      <path d="M28.6 36.4 L28.4 44.4" />
-      <path d="M34 36.4 L34.4 44.4" />
-      <path d="M37.8 36.2 L38.6 44.4" />
-
-      {/* Œil */}
-      <circle cx="16.4" cy="12.2" r="0.75" fill={OLIVE} stroke="none" />
-    </svg>
+      <img
+        src="/images/lama-marque.jpg"
+        alt=""
+        className="h-full w-auto max-w-none select-none"
+        style={{ transform: "scale(1.12)" }}
+        loading="lazy"
+        draggable={false}
+      />
+    </span>
   );
 }
 
@@ -375,7 +351,7 @@ export default function MidosMaryeem({ template }: { template: Template }) {
               />
 
               <div className="relative mt-10 flex flex-col items-center">
-                <LlamaMark className="mb-6" />
+                <LlamaMark className="mb-5" size={96} />
 
                 <p className="text-[10px] uppercase" style={{ ...serif, letterSpacing: "0.28em", color: INK, opacity: 0.65 }}>
                   Bismillah ar-Rahman ar-Rahim
@@ -599,7 +575,7 @@ export default function MidosMaryeem({ template }: { template: Template }) {
         className="relative overflow-hidden px-8 pb-44 pt-20 text-center"
         style={{ background: `linear-gradient(180deg, ${PAPER_WARM}, ${WASH}33)` }}
       >
-        <LlamaMark className="mx-auto mb-5" size={54} />
+        <LlamaMark className="mx-auto mb-5" size={120} />
         <Caps className="opacity-70">Confirmez votre présence</Caps>
         <Rule />
 
