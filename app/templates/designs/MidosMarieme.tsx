@@ -299,7 +299,7 @@ export default function MidosMaryeem({ template }: { template: Template }) {
                 className="mb-9 text-white"
                 style={{ ...script, fontSize: "clamp(2.75rem,11vw,4.5rem)", lineHeight: 1.05 }}
               >
-                {t.groom} <span style={{ ...serif, fontSize: "0.42em", letterSpacing: "0.2em" }}>et</span> {t.bride}
+                {t.groom} <span className="mx-2" style={{ ...serif, fontSize: "0.42em", letterSpacing: "0.02em", fontStyle: "italic" }}>et</span> {t.bride}
               </motion.p>
               <motion.button
                 initial={{ opacity: 0 }}
@@ -410,7 +410,8 @@ export default function MidosMaryeem({ template }: { template: Template }) {
             style={{ ...script, fontSize: "clamp(3rem,13vw,5.25rem)", lineHeight: 1.02, color: INK }}
           >
             {t.groom}
-            <span className="mx-3 align-middle" style={{ ...serif, fontSize: "0.26em", letterSpacing: "0.22em" }}>
+            {/* Interlettrage retiré : sur deux lettres il se lisait « e t ». */}
+            <span className="mx-5 align-middle" style={{ ...serif, fontSize: "0.28em", letterSpacing: "0.02em", fontStyle: "italic" }}>
               et
             </span>
             {t.bride}
