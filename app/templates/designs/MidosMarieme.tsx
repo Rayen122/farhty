@@ -9,14 +9,14 @@ import type { Template } from "../data";
 /* Palette relevée sur la référence : papier crème, lavis chaud en haut,
    verts sourds du paysage à l'aquarelle. Aucun accent saturé — la retenue
    est ce qui distingue ce style des autres modèles. */
-const PAPER = "#F7F2E7";
-const PAPER_WARM = "#F0E4D2";
-const WASH = "#EBD7BE";
-const SAGE = "#8B9B7A";
-const OLIVE = "#5A6B4C";
-const FOREST = "#3E4B36";
-const INK = "#4A4034";
-const SAND = "#B9975B";
+const PAPER = "#FBF9F3";      /* ivoire des tenues */
+const PAPER_WARM = "#EAF4F7";  /* voile de ciel */
+const WASH = "#8FCFE0";        /* ciel de midi */
+const SAGE = "#7FA659";        /* prairie */
+const OLIVE = "#5A7A3C";       /* prairie a l'ombre */
+const FOREST = "#3F5A2E";      /* bosquet au fond */
+const INK = "#2F4423";         /* texte : vert tres sombre, lisible sur ivoire */
+const SAND = "#C97B4E";        /* terre cuite des batisses */
 
 /* La feuille de style bascule .font-script sur Amiri en RTL : on impose donc
    les familles ici, et on isole les blocs latins en LTR. */
@@ -35,45 +35,107 @@ function PaperGrain() {
   );
 }
 
-/** Paysage à l'aquarelle : bosquet, prairie, quelques herbes. */
-function WatercolourLandscape({ className = "" }: { className?: string }) {
+/**
+ * Paysage à l'aquarelle.
+ *
+ * Les bords sont déformés par une turbulence : c'est ce qui distingue un lavis
+ * d'un aplat vectoriel. Les lavis sont empilés en faible opacité pour que les
+ * superpositions foncent d'elles-mêmes, comme un pigment qui se dépose.
+ */
+function WatercolourLandscape({ className = "", flip = false }: { className?: string; flip?: boolean }) {
   return (
-    <svg viewBox="0 0 480 190" className={className} preserveAspectRatio="none" aria-hidden>
+    <svg
+      viewBox="0 0 480 200"
+      className={className}
+      preserveAspectRatio="none"
+      style={flip ? { transform: "scaleX(-1)" } : undefined}
+      aria-hidden
+    >
       <defs>
-        <linearGradient id="ml-meadow" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor={SAGE} stopOpacity="0.42" />
-          <stop offset="100%" stopColor={OLIVE} stopOpacity="0.16" />
-        </linearGradient>
+        {/* Bords irréguliers : le lavis ne s'arrête jamais sur une ligne nette. */}
+        <filter id="ml-bleed" x="-12%" y="-12%" width="124%" height="124%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.022 0.05" numOctaves="4" seed="7" result="n" />
+          <feDisplacementMap in="SourceGraphic" in2="n" scale="13" xChannelSelector="R" yChannelSelector="G" />
+          <feGaussianBlur stdDeviation="0.7" />
+        </filter>
+        <filter id="ml-bleed-soft" x="-12%" y="-12%" width="124%" height="124%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.03 0.06" numOctaves="3" seed="21" result="n2" />
+          <feDisplacementMap in="SourceGraphic" in2="n2" scale="9" xChannelSelector="R" yChannelSelector="G" />
+          <feGaussianBlur stdDeviation="1.1" />
+        </filter>
+        {/* Granulation du pigment dans les creux. */}
+        <filter id="ml-grain-wash">
+          <feTurbulence type="fractalNoise" baseFrequency="0.7" numOctaves="3" seed="3" />
+          <feColorMatrix values="0 0 0 0 0.35 0 0 0 0 0.42 0 0 0 0 0.30 0 0 0 0.5 0" />
+          <feComposite in2="SourceGraphic" operator="in" />
+        </filter>
       </defs>
 
-      {/* Bosquet */}
-      <g opacity="0.75">
-        <ellipse cx="52" cy="96" rx="46" ry="34" fill={FOREST} opacity="0.5" />
-        <ellipse cx="96" cy="86" rx="40" ry="30" fill={OLIVE} opacity="0.55" />
-        <ellipse cx="140" cy="98" rx="34" ry="26" fill={SAGE} opacity="0.5" />
-        <ellipse cx="24" cy="108" rx="30" ry="22" fill={OLIVE} opacity="0.4" />
+      {/* Bosquet — masses irrégulières, jamais deux fois la même */}
+      <g filter="url(#ml-bleed)">
+        <path
+          d="M-10 128 C 14 96, 40 84, 62 92 C 74 66, 104 60, 122 76 C 142 62, 168 72, 174 94
+             C 196 88, 212 100, 210 122 C 180 132, 40 136, -10 132 Z"
+          fill={FOREST}
+          opacity="0.3"
+        />
+        <path
+          d="M28 130 C 42 104, 66 94, 86 102 C 98 82, 124 80, 136 98 C 156 94, 168 108, 164 124
+             C 130 134, 62 136, 28 130 Z"
+          fill={OLIVE}
+          opacity="0.34"
+        />
+        <path
+          d="M132 128 C 146 108, 172 100, 190 112 C 206 106, 220 118, 216 130 C 190 136, 152 136, 132 128 Z"
+          fill={SAGE}
+          opacity="0.4"
+        />
       </g>
 
-      {/* Prairie */}
-      <path d="M0 118 Q120 100 240 116 T480 108 L480 190 L0 190 Z" fill="url(#ml-meadow)" />
-      <path d="M0 138 Q140 124 280 140 T480 132 L480 190 L0 190 Z" fill={OLIVE} opacity="0.14" />
+      {/* Prairie — deux lavis qui se recouvrent */}
+      <g filter="url(#ml-bleed-soft)">
+        <path
+          d="M-10 132 C 90 116, 170 128, 250 122 C 330 116, 400 128, 490 118 L490 210 L-10 210 Z"
+          fill={SAGE}
+          opacity="0.3"
+        />
+        <path
+          d="M-10 158 C 110 142, 200 156, 300 150 C 380 145, 430 156, 490 150 L490 210 L-10 210 Z"
+          fill={OLIVE}
+          opacity="0.22"
+        />
+        <path
+          d="M-10 182 C 140 172, 260 184, 380 176 C 430 172, 460 178, 490 174 L490 210 L-10 210 Z"
+          fill={FOREST}
+          opacity="0.14"
+        />
+      </g>
 
-      {/* Herbes */}
-      <g stroke={FOREST} strokeWidth="1.6" strokeLinecap="round" opacity="0.42" fill="none">
-        {[402, 418, 432, 446, 462].map((x, i) => (
-          <path key={x} d={`M${x} 172 Q${x + (i % 2 ? 6 : -6)} ${150 - i * 4} ${x + (i % 2 ? 10 : -10)} ${132 - i * 5}`} />
-        ))}
-        {[26, 44, 60].map((x, i) => (
-          <path key={x} d={`M${x} 176 Q${x + (i % 2 ? 5 : -5)} 158 ${x + (i % 2 ? 9 : -9)} 144`} />
+      {/* Herbes — courbes, jamais des traits droits */}
+      <g stroke={FOREST} strokeWidth="1.5" strokeLinecap="round" fill="none" opacity="0.34">
+        {[
+          "M392 186 C 396 170, 392 158, 400 142",
+          "M406 188 C 414 172, 410 160, 422 148",
+          "M424 186 C 426 168, 420 158, 428 140",
+          "M440 188 C 448 174, 444 162, 456 152",
+          "M458 186 C 460 170, 454 160, 462 146",
+          "M22 190 C 28 176, 24 166, 32 154",
+          "M40 188 C 46 174, 42 164, 52 152",
+          "M58 190 C 60 178, 54 168, 62 158",
+        ].map((d) => (
+          <path key={d} d={d} />
         ))}
       </g>
 
-      {/* Taches de sable, comme les pigments qui granulent */}
-      <g fill={SAND} opacity="0.3">
-        {[[188, 150], [206, 162], [318, 146], [336, 158], [268, 168]].map(([cx, cy]) => (
-          <circle key={`${cx}`} cx={cx} cy={cy} r="2.4" />
+      {/* Fleurs éparses, comme les pâquerettes de la prairie */}
+      <g opacity="0.5">
+        {[[186, 168], [204, 180], [316, 164], [338, 176], [268, 186], [122, 176]].map(([cx, cy], i) => (
+          <circle key={cx} cx={cx} cy={cy} r={i % 2 ? 2 : 2.6} fill={i % 3 === 0 ? SAND : "#FFFFFF"} />
         ))}
       </g>
+
+      {/* Granulation posée par-dessus l'ensemble */}
+      <rect x="0" y="110" width="480" height="90" filter="url(#ml-grain-wash)" opacity="0.28" />
     </svg>
   );
 }
@@ -113,10 +175,10 @@ function Caps({ children, className = "", size = "text-[11px]" }: { children: Re
   );
 }
 
-export default function MidosMarieme({ template }: { template: Template }) {
+export default function MidosMaryeem({ template }: { template: Template }) {
   const router = useRouter();
   const reduceMotion = useReducedMotion();
-  const [phase, setPhase] = useState<"intro" | "card">("intro");
+  const [phase, setPhase] = useState<"video" | "arch" | "card">("video");
   const [soundOn, setSoundOn] = useState(false);
   const [rsvp, setRsvp] = useState<null | "yes" | "no">(null);
   const [countdown, setCountdown] = useState({ days: 0, hours: 0, minutes: 0 });
@@ -165,7 +227,7 @@ export default function MidosMarieme({ template }: { template: Template }) {
 
       {/* ═══ Ouverture : la vidéo de la demande, puis le papier ═══ */}
       <AnimatePresence>
-        {phase === "intro" && (
+        {phase === "video" && (
           <motion.div
             key="ml-intro"
             exit={{ opacity: 0 }}
@@ -173,14 +235,19 @@ export default function MidosMarieme({ template }: { template: Template }) {
             className="fixed inset-0 z-[100] flex flex-col items-center justify-end overflow-hidden bg-[#151810]"
           >
             <video
-              src="/videos/midos-marieme.mp4"
+              src="/videos/midos-maryeem.mp4"
               className="absolute inset-0 h-full w-full object-cover"
               autoPlay
               muted={!soundOn}
               playsInline
               controlsList="nodownload noremoteplayback"
               disablePictureInPicture
-              onEnded={() => setPhase("card")}
+              onPlay={(e) => {
+                /* La demande dure 24 s : au rythme réel, on perd le visiteur
+                   avant la carte. Accéléré, le geste reste lisible. */
+                e.currentTarget.playbackRate = 1.7;
+              }}
+              onEnded={() => setPhase("arch")}
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-black/30" />
 
@@ -207,13 +274,96 @@ export default function MidosMarieme({ template }: { template: Template }) {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 2.2, duration: 0.9 }}
-                onClick={() => setPhase("card")}
+                onClick={() => setPhase("arch")}
                 className="cursor-pointer rounded-full px-10 py-3.5 text-[11px] uppercase shadow-lg transition-colors duration-200 hover:brightness-105 focus-visible:outline-2 focus-visible:outline-offset-2"
                 style={{ ...serif, letterSpacing: "0.3em", backgroundColor: PAPER, color: INK, outlineColor: PAPER }}
               >
                 Ouvrir
               </motion.button>
             </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* ═══ La carte en arche, une fois la vidéo finie ═══ */}
+      <AnimatePresence>
+        {phase === "arch" && (
+          <motion.div
+            key="ml-arch"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: reduceMotion ? 0 : 0.7 }}
+            className="fixed inset-0 z-[95] flex items-center justify-center px-5 py-8"
+            style={{ background: "rgba(28,24,18,0.55)", backdropFilter: "blur(6px)" }}
+          >
+            <motion.div
+              initial={{ opacity: 0, y: 34, scale: 0.97 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 18 }}
+              transition={{ duration: reduceMotion ? 0 : 0.75, ease: [0.22, 1, 0.36, 1] }}
+              role="dialog"
+              aria-modal="true"
+              aria-label="Invitation"
+              className="relative flex max-h-full w-full max-w-[380px] flex-col items-center overflow-y-auto px-8 py-12 text-center shadow-[0_30px_70px_-30px_rgba(28,24,18,0.8)]"
+              /* L'arche : plein cintre en haut, base droite — la forme des
+                 faire-part gravés, et celle du portail d'une salle. */
+              style={{ backgroundColor: PAPER, borderRadius: "190px 190px 18px 18px" }}
+              dir="ltr"
+            >
+              {/* Filet intérieur qui redouble l'arche */}
+              <span
+                className="pointer-events-none absolute inset-3 border"
+                style={{ borderColor: SAND, opacity: 0.4, borderRadius: "178px 178px 12px 12px" }}
+                aria-hidden
+              />
+
+              <svg width="34" height="40" viewBox="0 0 34 40" className="relative mb-6" aria-hidden>
+                <g fill="none" stroke={OLIVE} strokeWidth="1.4">
+                  <circle cx="12" cy="9" r="5" />
+                  <circle cx="22" cy="9" r="5" />
+                  <circle cx="17" cy="17" r="5" />
+                  <path d="M17 22 L17 38" strokeLinecap="round" />
+                  <path d="M17 30 C 10 30, 7 26, 6 22 C 12 22, 16 25, 17 30 Z" />
+                </g>
+              </svg>
+
+              <p className="relative mb-7 text-[10px] uppercase" style={{ ...serif, letterSpacing: "0.3em", color: INK, opacity: 0.65 }}>
+                Bismillah ar-Rahman ar-Rahim
+              </p>
+
+              <p className="relative" style={{ ...script, fontSize: "clamp(2.6rem,12vw,3.6rem)", lineHeight: 1.05, color: FOREST }}>
+                {t.groom}
+              </p>
+              <span className="relative my-1 text-2xl" style={{ ...serif, color: SAND }}>
+                &amp;
+              </span>
+              <p className="relative" style={{ ...script, fontSize: "clamp(2.6rem,12vw,3.6rem)", lineHeight: 1.05, color: FOREST }}>
+                {t.bride}
+              </p>
+
+              <span className="relative my-7 h-px w-24" style={{ background: SAND, opacity: 0.6 }} aria-hidden />
+
+              <p className="relative max-w-[26ch] text-[15px] leading-[1.7]" style={{ ...serif, color: INK, opacity: 0.85 }}>
+                Nous avons la grande joie de vous convier à la célébration de notre mariage.
+              </p>
+
+              <p className="relative mt-7 text-sm uppercase" style={{ ...serif, letterSpacing: "0.22em", color: FOREST }}>
+                {t.date}
+              </p>
+              <p className="relative mt-1 text-sm uppercase" style={{ ...serif, letterSpacing: "0.22em", color: FOREST, opacity: 0.75 }}>
+                {t.city}
+              </p>
+
+              <button
+                onClick={() => setPhase("card")}
+                className="relative mt-9 inline-flex min-h-11 cursor-pointer items-center gap-3 rounded-full px-9 text-[11px] uppercase text-white transition-colors duration-200 hover:brightness-110 focus-visible:outline-2 focus-visible:outline-offset-2"
+                style={{ ...serif, letterSpacing: "0.26em", backgroundColor: OLIVE, outlineColor: FOREST }}
+              >
+                <ArrowLeft size={14} className="rotate-180" aria-hidden />
+                Découvrir
+              </button>
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
@@ -271,6 +421,31 @@ export default function MidosMarieme({ template }: { template: Template }) {
         </motion.div>
 
         <WatercolourLandscape className="pointer-events-none absolute inset-x-0 bottom-0 h-52 w-full" />
+      </section>
+
+      {/* ═══ Le tirage : la photo du lama, contrecollée ═══ */}
+      <section className="relative px-8 pb-20 pt-4">
+        <motion.figure
+          initial={{ opacity: 0, y: 24, rotate: -1.6 }}
+          whileInView={{ opacity: 1, y: 0, rotate: -1.6 }}
+          viewport={{ once: true, margin: "-80px" }}
+          transition={{ duration: reduceMotion ? 0 : 0.9 }}
+          className="mx-auto w-full max-w-[340px]"
+        >
+          {/* Marge blanche large : c'est ce qui fait lire l'image comme un tirage
+              posé sur le papier, et non comme une image de fond. */}
+          <div className="bg-white p-3 pb-14 shadow-[0_14px_34px_-18px_rgba(74,64,52,0.55)]">
+            <img
+              src="/images/midos-maryeem-lama.jpg"
+              alt="Midos et Maryeem devant le lama fleuri, au bord du lac"
+              className="block w-full"
+              loading="lazy"
+            />
+          </div>
+        </motion.figure>
+        <p className="mt-7 text-center" style={{ ...script, fontSize: "1.35rem", color: OLIVE }}>
+          là où tout a commencé
+        </p>
       </section>
 
       {/* ═══ Compte à rebours ═══ */}
