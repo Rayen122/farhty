@@ -19,6 +19,7 @@ import {
   Navigation,
 } from "lucide-react";
 import type { Template } from "../data";
+import { FarhtyLink } from "../../components/FarhtyCredit";
 import PhotoGallery3D from "../../components/PhotoGallery3D";
 
 interface AmourProps {
@@ -699,9 +700,7 @@ export default function Amour({ template }: AmourProps) {
         <div className="w-24 h-px bg-[#B81D28] mx-auto mb-6 opacity-40" />
         <p className="text-[#E0B8BC]">
           Créé avec amour sur{" "}
-          <a href="https://farhty.tn" className="underline hover:text-[#FFF]">
-            Farhty
-          </a>{" "}
+          <FarhtyLink className="underline hover:text-[#FFF]" />{" "}
           · {new Date().getFullYear()}
         </p>
       </footer>

@@ -11,6 +11,8 @@ type Row = {
   draft: { bride: string; groom: string; date: string; city: string; musicTitle?: string; musicUrl?: string };
   payment: { status: "unpaid" | "pending" | "paid"; amountDT: number; ref?: string; submittedAt?: string };
   phone?: string;
+  /** Invitation depuis laquelle ce client est arrivé — mesure la boucle de parrainage */
+  referredBy?: string;
   updatedAt: string;
 };
 
@@ -238,6 +240,22 @@ export default function AdminPage() {
               <p className="text-[11px] text-[#F4E4BA]/60 mb-3">
                 🎵 Musique : <span className="text-[#F4E4BA] font-bold">{r.draft.musicTitle || "Sans musique"}</span>
               </p>
+
+              {/* Origine : quelle invitation a ramené ce client */}
+              {r.referredBy && (
+                <p className="text-[11px] text-[#F4E4BA]/60 mb-3">
+                  🔁 Venu de l&apos;invitation{" "}
+                  <a
+                    href={`/i/${r.referredBy}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-[#D4AF37] font-bold underline"
+                    dir="ltr"
+                  >
+                    {r.referredBy}
+                  </a>
+                </p>
+              )}
 
               {/* Public invitation link (always visible) */}
               <div className="flex items-center gap-2 rounded-xl bg-black/30 border border-[#D4AF37]/15 px-3 py-2 mb-3">

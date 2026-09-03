@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { storage } from "../../lib/invitationStorage";
+import { guests, isGuestId, toGuestView } from "../../lib/guestStorage";
 import { getTemplateBySlug } from "../../templates/data";
 import { SavedInvitationView } from "../../templates/[slug]/page";
 
@@ -8,7 +9,11 @@ export const runtime = "nodejs";
 /* Le marié peut modifier son invitation à tout moment : jamais de cache */
 export const dynamic = "force-dynamic";
 
-type Props = { params: Promise<{ id: string }> };
+type Props = {
+  params: Promise<{ id: string }>;
+  /** `?g=<invité>` — lien nominatif. Absent sur le lien ouvert partagé en groupe. */
+  searchParams: Promise<{ g?: string }>;
+};
 
 async function loadInvitation(id: string) {
   const record = await storage.get(id).catch(() => null);
@@ -43,7 +48,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export default async function PublicInvitationPage({ params }: Props) {
+export default async function PublicInvitationPage({ params, searchParams }: Props) {
   const { id } = await params;
   const found = await loadInvitation(id);
   if (!found) notFound();
@@ -70,5 +75,18 @@ export default async function PublicInvitationPage({ params }: Props) {
     );
   }
 
-  return <SavedInvitationView slug={found.record.slug} saved={{ draft: found.record.draft, geo: found.record.geo, layout: found.record.layout }} />;
+  /* Lien nominatif : on salue la famille par son nom et sa réponse est
+     pré-remplie. Un identifiant qui ne correspond à rien retombe simplement
+     sur le lien ouvert plutôt que d'afficher une erreur à un invité. */
+  const { g } = await searchParams;
+  const guest = isGuestId(g) ? await guests.get(g).catch(() => null) : null;
+
+  return (
+    <SavedInvitationView
+      slug={found.record.slug}
+      id={id}
+      guest={guest && guest.invitationId === id ? toGuestView(guest) : null}
+      saved={{ draft: found.record.draft, geo: found.record.geo, layout: found.record.layout }}
+    />
+  );
 }

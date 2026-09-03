@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, Volume2, VolumeX, MapPin, Coffee, Flower2, UtensilsCrossed, Music4, Check } from "lucide-react";
 import type { Template } from "../data";
+import { FarhtyLink } from "../../components/FarhtyCredit";
 
 const BLUE = "#1B5FA6";
 const BLUE_DEEP = "#0E3D70";
@@ -336,29 +337,31 @@ export default function Zellige({ template }: { template: Template }) {
       </section>
 
       {/* ═══════ RSVP ═══════ */}
-      <section className="relative py-28 px-6 text-center" style={{ backgroundColor: CREAM }}>
-        <div className="max-w-md mx-auto">
-          <h2 className="font-script text-5xl mb-2" style={{ color: BLUE }}>Serez-vous des nôtres ?</h2>
-          <Divider />
-          <p className="text-sm mb-9" style={{ color: `${BLUE_DEEP}99` }}>Merci de confirmer avant le 1er mai</p>
-          {rsvp === null ? (
-            <div className="flex gap-4 justify-center">
-              <button onClick={() => setRsvp("yes")} className="px-8 py-3.5 rounded-full text-white text-sm font-medium transition-opacity duration-200 hover:opacity-85 cursor-pointer" style={{ backgroundColor: BLUE }}>Avec joie</button>
-              <button onClick={() => setRsvp("no")} className="px-8 py-3.5 rounded-full text-sm border transition-colors duration-200 hover:bg-black/5 cursor-pointer" style={{ borderColor: `${BLUE}44`, color: BLUE_DEEP }}>Malheureusement non</button>
-            </div>
-          ) : (
-            <motion.p initial={{ opacity: 0, scale: 0.92 }} animate={{ opacity: 1, scale: 1 }} className="flex items-center justify-center gap-2" style={{ color: BLUE_DEEP }}>
-              <Check size={18} style={{ color: BLUE }} /> {rsvp === "yes" ? "Merci ! Nous avons hâte de vous voir." : "Merci de nous avoir prévenus."}
-            </motion.p>
-          )}
-        </div>
-      </section>
+      {!t.hideRsvp && (
+        <section className="relative py-28 px-6 text-center" style={{ backgroundColor: CREAM }}>
+          <div className="max-w-md mx-auto">
+            <h2 className="font-script text-5xl mb-2" style={{ color: BLUE }}>Serez-vous des nôtres ?</h2>
+            <Divider />
+            <p className="text-sm mb-9" style={{ color: `${BLUE_DEEP}99` }}>Merci de confirmer avant le 1er mai</p>
+            {rsvp === null ? (
+              <div className="flex gap-4 justify-center">
+                <button onClick={() => setRsvp("yes")} className="px-8 py-3.5 rounded-full text-white text-sm font-medium transition-opacity duration-200 hover:opacity-85 cursor-pointer" style={{ backgroundColor: BLUE }}>Avec joie</button>
+                <button onClick={() => setRsvp("no")} className="px-8 py-3.5 rounded-full text-sm border transition-colors duration-200 hover:bg-black/5 cursor-pointer" style={{ borderColor: `${BLUE}44`, color: BLUE_DEEP }}>Malheureusement non</button>
+              </div>
+            ) : (
+              <motion.p initial={{ opacity: 0, scale: 0.92 }} animate={{ opacity: 1, scale: 1 }} className="flex items-center justify-center gap-2" style={{ color: BLUE_DEEP }}>
+                <Check size={18} style={{ color: BLUE }} /> {rsvp === "yes" ? "Merci ! Nous avons hâte de vous voir." : "Merci de nous avoir prévenus."}
+              </motion.p>
+            )}
+          </div>
+        </section>
+      )}
 
       <footer className="py-12 text-center relative" style={{ backgroundColor: CREAM }}>
         <p className="font-script text-3xl mb-2" style={{ color: `${BLUE}BB` }}>{t.bride} & {t.groom}</p>
         <p className="text-[10px] uppercase tracking-[0.3em]" style={{ color: `${BLUE_DEEP}55` }}>{t.date} · {t.lieu}</p>
         <p className="text-xs mt-5" style={{ color: `${BLUE_DEEP}55` }}>
-          Invitation digitale par <a href="https://farhty.tn" className="underline hover:opacity-70 transition-opacity">Farhty</a>
+          Invitation digitale par <FarhtyLink className="underline hover:opacity-70 transition-opacity" />
         </p>
       </footer>
     </main>

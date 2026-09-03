@@ -20,6 +20,7 @@ import {
   Crown,
 } from "lucide-react";
 import type { Template } from "../data";
+import { FarhtyLink } from "../../components/FarhtyCredit";
 import PhotoGallery3D from "../../components/PhotoGallery3D";
 
 interface LaJoieProps {
@@ -686,6 +687,7 @@ export default function LaJoie({ template }: LaJoieProps) {
       )}
 
       {/* ── FORMULAIRE RSVP ── */}
+      {!t.hideRsvp && (
       <section className="py-24 px-6 max-w-xl mx-auto text-center">
         <div className="bg-[#FFFDF9] p-8 sm:p-10 rounded-3xl border-2 border-[#D4AF37]/60 shadow-xl relative overflow-hidden">
           <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-transparent via-[#C5A059] to-transparent" />
@@ -783,6 +785,7 @@ export default function LaJoie({ template }: LaJoieProps) {
           )}
         </div>
       </section>
+      )}
 
       {/* ── FOOTER ── */}
       <footer className="py-12 bg-[#121E2C] text-[#E2E8F0] text-center font-serif text-xs">
@@ -795,9 +798,7 @@ export default function LaJoie({ template }: LaJoieProps) {
         <div className="w-24 h-px bg-[#D4AF37] mx-auto mb-6 opacity-40" />
         <p className="text-[#94A3B8]">
           Créé avec prestige sur{" "}
-          <a href="https://farhty.tn" className="underline hover:text-[#FFF]">
-            Farhty
-          </a>{" "}
+          <FarhtyLink className="underline hover:text-[#FFF]" />{" "}
           · {new Date().getFullYear()}
         </p>
       </footer>

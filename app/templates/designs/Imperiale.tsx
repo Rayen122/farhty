@@ -16,6 +16,7 @@ import {
   Play,
 } from "lucide-react";
 import type { Template } from "../data";
+import { FarhtyLink } from "../../components/FarhtyCredit";
 import PhotoGallery3D from "../../components/PhotoGallery3D";
 
 const GOLD = "#C9A24B";
@@ -338,30 +339,32 @@ export default function Imperiale({ template }: { template: Template }) {
       )}
 
       {/* ═══════ RSVP ═══════ */}
-      <section className="relative py-28 px-6 z-[2] text-center">
-        <div className="max-w-md mx-auto">
-          <div className="w-20 h-20 mx-auto mb-6 rounded-full overflow-hidden shadow-2xl" style={{ boxShadow: `0 8px 30px rgba(0,0,0,0.6), 0 0 0 1px ${GOLD}33` }}>
-            <img src="/images/rose_wax_seal_4k.webp" alt="" className="w-full h-full object-cover" />
-          </div>
-          <h2 className="font-script text-5xl mb-3" style={goldText}>Confirmez votre présence</h2>
-          <GoldRule />
-          <p className="text-white/60 text-sm mb-10">Merci de confirmer avant le 1er novembre</p>
-          {rsvp === null ? (
-            <div className="flex gap-4 justify-center">
-              <button onClick={() => setRsvp("yes")} className="px-8 py-3.5 rounded-full text-sm font-medium transition-opacity duration-200 hover:opacity-85 cursor-pointer shadow-lg" style={{ backgroundColor: GOLD, color: DARK }}>
-                C'est un honneur
-              </button>
-              <button onClick={() => setRsvp("no")} className="px-8 py-3.5 rounded-full text-sm border text-white/70 hover:bg-white/5 transition-colors duration-200 cursor-pointer" style={{ borderColor: `${GOLD}44` }}>
-                Malheureusement non
-              </button>
+      {!t.hideRsvp && (
+        <section className="relative py-28 px-6 z-[2] text-center">
+          <div className="max-w-md mx-auto">
+            <div className="w-20 h-20 mx-auto mb-6 rounded-full overflow-hidden shadow-2xl" style={{ boxShadow: `0 8px 30px rgba(0,0,0,0.6), 0 0 0 1px ${GOLD}33` }}>
+              <img src="/images/rose_wax_seal_4k.webp" alt="" className="w-full h-full object-cover" />
             </div>
-          ) : (
-            <motion.p initial={{ opacity: 0, scale: 0.92 }} animate={{ opacity: 1, scale: 1 }} className="flex items-center justify-center gap-2 text-white/80">
-              <Check size={18} style={{ color: GOLD }} /> {rsvp === "yes" ? "Merci, votre présence nous honore." : "Merci de nous avoir prévenus."}
-            </motion.p>
-          )}
-        </div>
-      </section>
+            <h2 className="font-script text-5xl mb-3" style={goldText}>Confirmez votre présence</h2>
+            <GoldRule />
+            <p className="text-white/60 text-sm mb-10">Merci de confirmer avant le 1er novembre</p>
+            {rsvp === null ? (
+              <div className="flex gap-4 justify-center">
+                <button onClick={() => setRsvp("yes")} className="px-8 py-3.5 rounded-full text-sm font-medium transition-opacity duration-200 hover:opacity-85 cursor-pointer shadow-lg" style={{ backgroundColor: GOLD, color: DARK }}>
+                  C'est un honneur
+                </button>
+                <button onClick={() => setRsvp("no")} className="px-8 py-3.5 rounded-full text-sm border text-white/70 hover:bg-white/5 transition-colors duration-200 cursor-pointer" style={{ borderColor: `${GOLD}44` }}>
+                  Malheureusement non
+                </button>
+              </div>
+            ) : (
+              <motion.p initial={{ opacity: 0, scale: 0.92 }} animate={{ opacity: 1, scale: 1 }} className="flex items-center justify-center gap-2 text-white/80">
+                <Check size={18} style={{ color: GOLD }} /> {rsvp === "yes" ? "Merci, votre présence nous honore." : "Merci de nous avoir prévenus."}
+              </motion.p>
+            )}
+          </div>
+        </section>
+      )}
 
       {/* ═══════ FOOTER ═══════ */}
       <footer className="relative py-14 px-6 z-[2] text-center">
@@ -370,7 +373,7 @@ export default function Imperiale({ template }: { template: Template }) {
         <p className="text-[10px] uppercase tracking-[0.3em] text-white/30 mt-3">{t.date} · {t.lieu}</p>
         <p className="text-xs text-white/25 mt-6">
           Invitation digitale par{" "}
-          <a href="https://farhty.tn" className="underline hover:text-white/50 transition-colors">Farhty</a>
+          <FarhtyLink className="underline hover:text-white/50 transition-colors" />
         </p>
       </footer>
     </main>

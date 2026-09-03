@@ -572,6 +572,7 @@ export default function MidosMaryeem({ template }: { template: Template }) {
       </section>
 
       {/* ═══ Confirmation de présence ═══ */}
+      {!t.hideRsvp && (
       <section
         className="relative overflow-hidden px-8 pb-44 pt-20 text-center"
         style={{ background: `linear-gradient(180deg, ${PAPER_WARM}, ${WASH}33)` }}
@@ -682,6 +683,7 @@ export default function MidosMaryeem({ template }: { template: Template }) {
 
         <WatercolourLandscape className="pointer-events-none absolute inset-x-0 bottom-0 h-40 w-full opacity-70" />
       </section>
+      )}
     </main>
   );
 }

@@ -1,6 +1,9 @@
 export interface Template {
   id: number;
   slug: string;
+  /** Hors galerie : la page reste servie, mais le modèle n'est proposé nulle
+      part. Sert aux invitations offertes, qu'on partage par lien seul. */
+  unlisted?: boolean;
   category: string;
   name: string;
   subtitle: string;
@@ -51,6 +54,39 @@ export function mapsEmbedFor(t: Pick<Template, "geo" | "previewText">): string {
 }
 
 export const templates: Template[] = [
+  {
+    id: 310,
+    slug: "emeraude-royale",
+    category: "الستار الأحمر والملكيات 🔴",
+    name: "الزمرد الملكي",
+    subtitle: "مظروف الرخام الزمردي وسعاة الذهب 👑",
+    description: "تجربة ملكية ساحرة: مظروف مخملي بالزمرد الأخضر والذهب الخالص ينفتح بلمسة ساحرة ليكشف عن بطاقة دعوتكم الفاخرة.",
+    accent: "#D4AF37",
+    secondary: "#059669",
+    bg: "linear-gradient(180deg, #021F18 0%, #063B2F 50%, #011410 100%)",
+    decorations: ["👑", "💎", "✨"],
+    previewText: {
+      bride: "ريم",
+      groom: "أمير",
+      date: "25 أكتوبر 2026",
+      time: "20h00",
+      lieu: "قصر الزمرد الملكي",
+      city: "قمرت",
+      quranVerse: "وَمِنْ آيَاتِهِ أَنْ خَلَقَ لَكُم مِّنْ أَنفُسِكُمْ أَزْوَاجًا لِّتَسْكُنُوا إِلَيْهَا وَجَعَلَ بَيْنَكُم مَّوَدَّةً وَرَحْمَةً",
+      story: [
+        { title: "بداية الحكاية", text: "تحت أنوار قصر الزمرد، تقاطعت نظراتنا لتبدأ أجمل قصة حب تكللت بهذا اليوم المبارك." },
+        { title: "العهد الأبدي", text: "في ليلة تجمع الأهل والأحبة، ننشر الفرح ونعلن بداية رحلتنا المشتركة." },
+      ],
+      program: [
+        { time: "19:30", title: "استقبال الضيوف", desc: "ترحيب ملكي على أنغام الموسيقى الهادئة" },
+        { time: "20:30", title: "مراسم عقد القران", desc: "توقيع العهد والدخول السامي للعروسين" },
+        { time: "22:00", title: "مأدبة العشاء وحفل الزفاف", desc: "عشاء فاخر وأجواء احتفالية مبهجة" },
+      ],
+      photos: [],
+    },
+    style: "emeraude-royale",
+    image: "/images/royal_gates.webp"
+  },
   {
     id: 301,
     slug: "porte-chateau",
@@ -495,6 +531,52 @@ export const templates: Template[] = [
     image: "/images/la_joie_columns_4k.webp",
   },
   {
+    id: 311,
+    slug: "midos-maryeem",
+    unlisted: true,
+    category: "Prairie & Aquarelle",
+    name: "Midos & Maryeem",
+    subtitle: "Aquarelle & Papier Crème",
+    description:
+      "Papier texturé, lavis chaud et paysage à l'aquarelle — prénoms au calligraphe, capitales espacées, retenue absolue. Le style des faire-part gravés.",
+    accent: "#5A6B4C",
+    secondary: "#B9975B",
+    bg: "linear-gradient(180deg, #F0E4D2 0%, #F7F2E7 55%, #F7F2E7 100%)",
+    decorations: ["❦", "✦", "❧"],
+    previewText: {
+      bride: "Maryeem",
+      groom: "Midos",
+      date: "12 Septembre 2026",
+      time: "18h00",
+      lieu: "Domaine du Lac",
+      city: "Tunis",
+      story: [
+        {
+          title: "La demande",
+          text: "Au milieu du jardin, devant un lama géant fait de roses blanches, Midos s'est agenouillé. Maryeem n'a pas trouvé ses mots — elle a pleuré et ri en même temps.",
+        },
+        {
+          title: "La promesse",
+          text: "Il n'a dit qu'une phrase : ce sera toujours toi. Depuis ce jour, tout se prépare pour un seul soir.",
+        },
+        {
+          title: "La fête",
+          text: "Aujourd'hui, nous voulons la vivre avec vous — au même endroit, sous le même ciel.",
+        },
+      ],
+      program: [
+        { time: "17:30", title: "Accueil", desc: "Réception des invités dans le jardin" },
+        { time: "18:00", title: "Cérémonie", desc: "Les vœux face au lac" },
+        { time: "20:00", title: "Dîner", desc: "Dîner sous les étoiles" },
+        { time: "22:00", title: "Soirée", desc: "Musique et danse jusqu\u2019au matin" },
+      ],
+      photos: [],
+    },
+    style: "midos",
+    image: "/images/midos-maryeem-cover.jpg",
+    video: "/videos/midos-maryeem.mp4",
+  },
+  {
     id: 11,
     slug: "jasmin",
     category: "Traditionnel Tunisien",
@@ -564,3 +646,6 @@ export const templates: Template[] = [
 
 export const getTemplateBySlug = (slug: string) => templates.find(t => t.slug === slug);
 export const getTemplateById = (id: number) => templates.find(t => t.id === id);
+
+/** Ce que voient les visiteurs : tout sauf les modèles hors galerie. */
+export const listedTemplates: Template[] = templates.filter((t) => !t.unlisted);

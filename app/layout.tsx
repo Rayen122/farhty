@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Lalezar, Tajawal, Fredoka, Vazirmatn, Playfair_Display, DM_Sans, Great_Vibes, Cormorant_Infant, Amiri, Cairo } from "next/font/google";
+import { Lalezar, Tajawal, Fredoka, Vazirmatn, Playfair_Display, DM_Sans, DM_Serif_Display, Montserrat, Great_Vibes, Cormorant_Infant, Amiri, Cairo } from "next/font/google";
 import "./globals.css";
 import AntiCopyGuard from "./components/AntiCopyGuard";
 import LocaleProvider from "./components/LocaleProvider";
@@ -56,6 +56,20 @@ const playfair = Playfair_Display({
 const dmSans = DM_Sans({
   variable: "--font-dm-sans",
   subsets: ["latin"],
+  display: "swap",
+});
+
+const dmSerif = DM_Serif_Display({
+  variable: "--font-dm-serif",
+  subsets: ["latin"],
+  weight: "400",
+  display: "swap",
+});
+
+const montserrat = Montserrat({
+  variable: "--font-montserrat",
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800"],
   display: "swap",
 });
 
@@ -124,7 +138,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ar" dir="rtl" className={`${lalezar.variable} ${tajawal.variable} ${fredoka.variable} ${vazirmatn.variable} ${playfair.variable} ${dmSans.variable} ${greatVibes.variable} ${cormorant.variable} ${amiri.variable} ${cairo.variable}`}>
+    <html lang="ar" dir="rtl" className={`${lalezar.variable} ${tajawal.variable} ${fredoka.variable} ${vazirmatn.variable} ${playfair.variable} ${dmSans.variable} ${dmSerif.variable} ${montserrat.variable} ${greatVibes.variable} ${cormorant.variable} ${amiri.variable} ${cairo.variable}`}>
       <body className="min-h-full flex flex-col antialiased overflow-x-hidden w-full">
         <AntiCopyGuard />
         {/* `lang` et `dir` posés ci-dessus sont ceux du rendu serveur ; le

@@ -37,6 +37,8 @@ export async function GET(req: Request) {
         /* La liste sert à ouvrir l'invitation pour vérifier : on expose le lien
            de modification ici, mais uniquement derrière le jeton administrateur. */
         editToken: r.editToken,
+        /* Absent de `toPublic` — l'origine d'un client ne se lit que par l'exploitant */
+        referredBy: r.referredBy,
       })),
       { headers: { "Cache-Control": "no-store" } }
     );

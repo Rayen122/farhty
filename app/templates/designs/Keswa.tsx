@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, Volume2, VolumeX, MapPin, Star, Gem, UtensilsCrossed, Music4, Check } from "lucide-react";
 import type { Template } from "../data";
+import { FarhtyLink } from "../../components/FarhtyCredit";
 
 const WINE = "#7A1730";
 const WINE_DEEP = "#3D0F1C";
@@ -276,30 +277,32 @@ export default function Keswa({ template }: { template: Template }) {
       </section>
 
       {/* ═══════ RSVP ═══════ */}
-      <section className="relative py-28 px-6 text-center">
-        <div className="max-w-md mx-auto">
-          <h2 className="font-script text-5xl mb-2" style={goldText}>شرّفونا بحضوركم</h2>
-          <Divider />
-          <p className="text-white/60 text-sm mb-9">أكّدولنا قبل 1 نوفمبر</p>
-          {rsvp === null ? (
-            <div className="flex gap-4 justify-center">
-              <button onClick={() => setRsvp("yes")} className="px-8 py-3.5 rounded-full text-sm font-medium transition-opacity duration-200 hover:opacity-85 cursor-pointer" style={{ backgroundColor: GOLD, color: WINE_DARK }}>بكلّ فرح</button>
-              <button onClick={() => setRsvp("no")} className="px-8 py-3.5 rounded-full text-sm border text-white/70 hover:bg-white/5 transition-colors duration-200 cursor-pointer" style={{ borderColor: `${GOLD}44` }}>للأسف لا</button>
-            </div>
-          ) : (
-            <motion.p initial={{ opacity: 0, scale: 0.92 }} animate={{ opacity: 1, scale: 1 }} className="flex items-center justify-center gap-2 text-white/80">
-              <Check size={18} style={{ color: GOLD }} /> {rsvp === "yes" ? "شكراً، هذا شرف لينا." : "شكراً على الإعلام."}
-            </motion.p>
-          )}
-        </div>
-      </section>
+      {!t.hideRsvp && (
+        <section className="relative py-28 px-6 text-center">
+          <div className="max-w-md mx-auto">
+            <h2 className="font-script text-5xl mb-2" style={goldText}>شرّفونا بحضوركم</h2>
+            <Divider />
+            <p className="text-white/60 text-sm mb-9">أكّدولنا قبل 1 نوفمبر</p>
+            {rsvp === null ? (
+              <div className="flex gap-4 justify-center">
+                <button onClick={() => setRsvp("yes")} className="px-8 py-3.5 rounded-full text-sm font-medium transition-opacity duration-200 hover:opacity-85 cursor-pointer" style={{ backgroundColor: GOLD, color: WINE_DARK }}>بكلّ فرح</button>
+                <button onClick={() => setRsvp("no")} className="px-8 py-3.5 rounded-full text-sm border text-white/70 hover:bg-white/5 transition-colors duration-200 cursor-pointer" style={{ borderColor: `${GOLD}44` }}>للأسف لا</button>
+              </div>
+            ) : (
+              <motion.p initial={{ opacity: 0, scale: 0.92 }} animate={{ opacity: 1, scale: 1 }} className="flex items-center justify-center gap-2 text-white/80">
+                <Check size={18} style={{ color: GOLD }} /> {rsvp === "yes" ? "شكراً، هذا شرف لينا." : "شكراً على الإعلام."}
+              </motion.p>
+            )}
+          </div>
+        </section>
+      )}
 
       <footer className="py-12 text-center relative">
         <NajmaStar size={60} draw={true} />
         <p className="font-script text-3xl mt-2" style={goldText}>{t.bride} &amp; {t.groom}</p>
         <p className="text-[10px] uppercase tracking-[0.3em] text-white/30 mt-3">{t.date} · {t.lieu}</p>
         <p className="text-xs text-white/25 mt-6">
-          دعوة رقمية من <a href="https://farhty.tn" className="underline hover:text-white/50 transition-colors">Farhty</a>
+          دعوة رقمية من <FarhtyLink className="underline hover:text-white/50 transition-colors" />
         </p>
       </footer>
     </main>

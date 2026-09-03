@@ -20,10 +20,14 @@ import JardinVintage from "../designs/JardinVintage";
 import Amour from "../designs/Amour";
 import LaJoie from "../designs/LaJoie";
 import Jasmin from "../designs/Jasmin";
+import MidosMarieme from "../designs/MidosMarieme";
 import Tunisian from "../designs/Tunisian";
+import EmeraudeRoyale from "../designs/EmeraudeRoyale";
 import Da3waTemplates from "../designs/Da3waTemplates";
 import DeviceFrame from "../../components/DeviceFrame";
 import MusicPlayerWidget from "../../components/MusicPlayerWidget";
+import InvitationCreditBar, { FarhtyLink, InvitationRefProvider } from "../../components/FarhtyCredit";
+import GuestRsvp, { type GuestView } from "../../components/GuestRsvp";
 import { useInvitationStore, subscribeToDraftAcrossFrames } from "../../lib/invitationStore";
 
 export default function TemplateDemoPageEntry() {
@@ -42,17 +46,39 @@ function TemplateDemoPage() {
  * Invitation réellement enregistrée, affichée sur /i/<id>.
  * On réutilise tout le rendu ci-dessous — les 24 designs — au lieu de le dupliquer.
  */
-export function SavedInvitationView({ slug, saved }: { slug: string; saved: SavedInvitation }) {
+export function SavedInvitationView({
+  slug,
+  saved,
+  id,
+  guest,
+}: {
+  slug: string;
+  saved: SavedInvitation;
+  /** Sert de source au lien de parrainage imprimé en bas de l'invitation */
+  id?: string;
+  /** Famille qui consulte, quand l'invitation a été ouverte par un lien nominatif */
+  guest?: GuestView | null;
+}) {
   return (
     <Suspense fallback={null}>
-      <TemplateContent slugProp={slug} saved={saved} />
+      <TemplateContent slugProp={slug} saved={saved} invitationId={id} guest={guest} />
     </Suspense>
   );
 }
 
 type SavedInvitation = { draft: Template["previewText"]; geo?: Template["geo"]; layout?: Template["layout"] };
 
-function TemplateContent({ slugProp, saved }: { slugProp?: string; saved?: SavedInvitation } = {}) {
+function TemplateContent({
+  slugProp,
+  saved,
+  invitationId,
+  guest,
+}: {
+  slugProp?: string;
+  saved?: SavedInvitation;
+  invitationId?: string;
+  guest?: GuestView | null;
+} = {}) {
   const params = useParams();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -104,7 +130,14 @@ function TemplateContent({ slugProp, saved }: { slugProp?: string; saved?: Saved
     : saved
       ? {
           ...template,
-          previewText: { ...template.previewText, ...saved.draft },
+          previewText: {
+            ...template.previewText,
+            ...saved.draft,
+            /* Le bloc RSVP décoratif de la maquette laisse place au vrai, qui
+               enregistre la réponse. Seuls les modèles `da3wa` honorent ce
+               drapeau ; les autres gardent encore le leur (à retirer). */
+            hideRsvp: true,
+          },
           geo: saved.geo ?? template.geo,
           layout: saved.layout ?? template.layout,
         }
@@ -458,9 +491,7 @@ function TemplateContent({ slugProp, saved }: { slugProp?: string; saved?: Saved
 
               <p className="text-xs text-white/20 font-serif-elegant">
                 دعوة رقمية من{" "}
-                <a href="https://farhty.tn" className="underline hover:text-white/50 transition-all">
-                  Farhty
-                </a>{" "}
+                <FarhtyLink className="underline hover:text-white/50 transition-all" />{" "}
                 · {new Date().getFullYear()}
               </p>
             </div>
@@ -471,10 +502,12 @@ function TemplateContent({ slugProp, saved }: { slugProp?: string; saved?: Saved
 
     // Dispatch to dedicated design components
     if (template.style.startsWith("da3wa")) return <Da3waTemplates template={template} editable={isDraft} />;
+    if (template.style === "emeraude-royale") return <EmeraudeRoyale template={template} />;
     if (template.style === "la-joie") return <LaJoie template={template} />;
     if (template.style === "amour") return <Amour template={template} />;
     if (template.style === "imperiale") return <Imperiale template={template} />;
     if (template.style === "jardin") return <JardinVintage template={template} />;
+    if (template.style === "midos") return <MidosMarieme template={template} />;
     if (template.style === "jasmin") return <Jasmin template={template} />;
     return <Tunisian template={template} />;
   };
@@ -491,18 +524,26 @@ function TemplateContent({ slugProp, saved }: { slugProp?: string; saved?: Saved
   // En iframe, ou pour une invitation réelle envoyée aux invités : plein écran, sans maquette
   if (isEmbed || saved) {
     return (
-      <>
+      <InvitationRefProvider id={invitationId}>
         {content}
+        {/* Confirmation de présence réelle, avant le bandeau de marque : la
+            réponse de l'invité passe en premier, la publicité en dernier. */}
+        {saved && invitationId && (
+          <GuestRsvp invitationId={invitationId} guest={guest ?? null} />
+        )}
+        {/* Uniquement sur une invitation réellement envoyée : dans l'éditeur, le
+            marié n'a pas besoin qu'on lui vende le produit qu'il vient d'acheter. */}
+        {saved && <InvitationCreditBar />}
         {musicWidget}
-      </>
+      </InvitationRefProvider>
     );
   }
 
   // Outside iframe, wrap in DeviceFrame (mobile mockup by default)
   return (
-    <>
+    <InvitationRefProvider id={invitationId}>
       <DeviceFrame desktopNode={content} />
       {musicWidget}
-    </>
+    </InvitationRefProvider>
   );
 }

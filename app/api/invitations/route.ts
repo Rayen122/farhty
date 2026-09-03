@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { cookies } from "next/headers";
 import {
   storage,
   newInvitationId,
@@ -8,6 +9,7 @@ import {
   type InvitationRecord,
 } from "../../lib/invitationStorage";
 import { getTemplateBySlug } from "../../templates/data";
+import { REFERRAL_COOKIE, isValidRef } from "../../lib/brand";
 
 export const runtime = "nodejs";
 
@@ -33,6 +35,12 @@ export async function POST(req: Request) {
      du barème côté serveur, sinon n'importe qui paierait 0 د.ت. */
   const planId = isPlanId(plan) ? plan : "elegante";
 
+  /* Parrainage : déposé par /da3wa?ref=… quand l'invité d'un mariage revient
+     commander le sien. Vient du cookie, jamais du corps de requête, pour qu'on
+     ne puisse pas s'attribuer soi-même l'origine d'un client. */
+  const referral = (await cookies()).get(REFERRAL_COOKIE)?.value;
+  const referredBy = isValidRef(referral) ? referral : undefined;
+
   const now = new Date().toISOString();
   const record: InvitationRecord = {
     id: newInvitationId(draft.bride, draft.groom),
@@ -43,6 +51,7 @@ export async function POST(req: Request) {
     layout,
     plan: planId,
     payment: { status: "unpaid", amountDT: PLANS[planId].amountDT },
+    referredBy,
     createdAt: now,
     updatedAt: now,
   };

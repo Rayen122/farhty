@@ -13,3 +13,14 @@ export const WHATSAPP_URL = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURICo
 )}`;
 
 export const PHONE_URL = `tel:${PHONE_E164}`;
+
+/**
+ * Même message, suivi de l'invitation qui a amené le client.
+ * L'attribution arrive ainsi directement dans la conversation WhatsApp :
+ * pas besoin d'ouvrir un tableau de bord pour savoir quel mariage rapporte.
+ */
+export function whatsappUrlWithRef(ref?: string): string {
+  if (!ref) return WHATSAPP_URL;
+  const text = `${WHATSAPP_GREETING}\n\n(جاني من دعوة : ${ref})`;
+  return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(text)}`;
+}

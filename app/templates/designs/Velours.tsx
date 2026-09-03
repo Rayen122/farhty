@@ -19,6 +19,7 @@ import {
   Clock,
 } from "lucide-react";
 import type { Template } from "../data";
+import { FarhtyLink } from "../../components/FarhtyCredit";
 
 const BURGUNDY = "#33090E";
 const BURGUNDY_LIGHT = "#4A0E14";
@@ -493,6 +494,7 @@ export default function Velours({ template }: { template: Template }) {
       </section>
 
       {/* ── RSVP enveloppe ── */}
+      {!t.hideRsvp && (
       <section className="py-28 px-6 text-center z-20 relative">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -555,15 +557,14 @@ export default function Velours({ template }: { template: Template }) {
           )}
         </motion.div>
       </section>
+      )}
 
       <footer className="py-10 text-center text-xs text-white/25 z-20 relative">
         <p className="font-script text-2xl mb-2" style={{ color: `${gold}AA` }}>
           {t.bride} &amp; {t.groom}
         </p>
         دعوة رقمية من{" "}
-        <a href="https://farhty.tn" className="underline hover:text-white/50 transition-colors">
-          Farhty
-        </a>
+        <FarhtyLink className="underline hover:text-white/50 transition-colors" />
       </footer>
     </main>
   );

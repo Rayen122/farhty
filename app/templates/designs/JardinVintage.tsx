@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { motion, AnimatePresence, useScroll, useTransform, useMotionValue, useSpring } from "framer-motion";
 import { ArrowLeft, Volume2, VolumeX, MapPin, Flower2, Wine, UtensilsCrossed, Music4, Check } from "lucide-react";
 import type { Template } from "../data";
+import { FarhtyLink } from "../../components/FarhtyCredit";
 
 const SAGE = "#8A7B5C";
 const SAGE_DEEP = "#5F5A42";
@@ -297,29 +298,31 @@ Voir l'itinéraire
       </section>
 
       {/* ═══════ RSVP ═══════ */}
-      <section className="relative py-28 px-6 text-center" style={{ background: "linear-gradient(180deg,#E7E2D2,#D6D2BE)" }}>
-        <div className="max-w-md mx-auto">
-          <h2 className="font-script text-5xl mb-1" style={{ color: SAGE_DEEP }}>Serez-vous des nôtres ?</h2>
-          <Divider />
-          <p className="text-sm mb-9" style={{ color: `${INK}99` }}>Merci de confirmer avant le 1er juillet</p>
-          {rsvp === null ? (
-            <div className="flex gap-4 justify-center">
-              <button onClick={() => setRsvp("yes")} className="px-8 py-3.5 rounded-full text-white text-sm font-medium transition-opacity duration-200 hover:opacity-85 cursor-pointer" style={{ backgroundColor: SAGE }}>Avec joie</button>
-              <button onClick={() => setRsvp("no")} className="px-8 py-3.5 rounded-full text-sm border transition-colors duration-200 hover:bg-black/5 cursor-pointer" style={{ borderColor: `${SAGE}55`, color: SAGE_DEEP }}>Malheureusement non</button>
-            </div>
-          ) : (
-            <motion.p initial={{ opacity: 0, scale: 0.92 }} animate={{ opacity: 1, scale: 1 }} className="flex items-center justify-center gap-2" style={{ color: SAGE_DEEP }}>
-              <Check size={18} style={{ color: SAGE }} /> {rsvp === "yes" ? "Merci ! Nous avons hâte de vous voir." : "Merci de nous avoir prévenus."}
-            </motion.p>
-          )}
-        </div>
-      </section>
+      {!t.hideRsvp && (
+        <section className="relative py-28 px-6 text-center" style={{ background: "linear-gradient(180deg,#E7E2D2,#D6D2BE)" }}>
+          <div className="max-w-md mx-auto">
+            <h2 className="font-script text-5xl mb-1" style={{ color: SAGE_DEEP }}>Serez-vous des nôtres ?</h2>
+            <Divider />
+            <p className="text-sm mb-9" style={{ color: `${INK}99` }}>Merci de confirmer avant le 1er juillet</p>
+            {rsvp === null ? (
+              <div className="flex gap-4 justify-center">
+                <button onClick={() => setRsvp("yes")} className="px-8 py-3.5 rounded-full text-white text-sm font-medium transition-opacity duration-200 hover:opacity-85 cursor-pointer" style={{ backgroundColor: SAGE }}>Avec joie</button>
+                <button onClick={() => setRsvp("no")} className="px-8 py-3.5 rounded-full text-sm border transition-colors duration-200 hover:bg-black/5 cursor-pointer" style={{ borderColor: `${SAGE}55`, color: SAGE_DEEP }}>Malheureusement non</button>
+              </div>
+            ) : (
+              <motion.p initial={{ opacity: 0, scale: 0.92 }} animate={{ opacity: 1, scale: 1 }} className="flex items-center justify-center gap-2" style={{ color: SAGE_DEEP }}>
+                <Check size={18} style={{ color: SAGE }} /> {rsvp === "yes" ? "Merci ! Nous avons hâte de vous voir." : "Merci de nous avoir prévenus."}
+              </motion.p>
+            )}
+          </div>
+        </section>
+      )}
 
       <footer className="py-12 text-center" style={{ backgroundColor: CREAM }}>
         <p className="font-script text-3xl" style={{ color: SAGE_DEEP }}>{t.bride} & {t.groom}</p>
         <p className="text-[10px] uppercase tracking-[0.3em] mt-2" style={{ color: `${INK}66` }}>{t.date} · {t.lieu}</p>
         <p className="text-xs mt-5" style={{ color: `${INK}55` }}>
-          Invitation digitale par <a href="https://farhty.tn" className="underline hover:opacity-70 transition-opacity">Farhty</a>
+          Invitation digitale par <FarhtyLink className="underline hover:opacity-70 transition-opacity" />
         </p>
       </footer>
     </main>

@@ -19,6 +19,7 @@ import {
   Navigation,
 } from "lucide-react";
 import type { Template } from "../data";
+import { FarhtyLink } from "../../components/FarhtyCredit";
 import PhotoGallery3D from "../../components/PhotoGallery3D";
 
 interface TunisianProps {
@@ -473,6 +474,7 @@ export default function Tunisian({ template }: TunisianProps) {
       )}
 
       {/* ── FORMULAIRE RSVP ── */}
+      {!t.hideRsvp && (
       <section className="py-24 px-6 bg-gradient-to-br from-[#1B5FA6] to-[#0D1F2D] text-white">
         <div className="max-w-xl mx-auto text-center">
           <div className="bg-white/5 backdrop-blur-xl p-8 sm:p-12 rounded-[2rem] border border-white/10 shadow-2xl relative overflow-hidden">
@@ -568,6 +570,7 @@ export default function Tunisian({ template }: TunisianProps) {
           </div>
         </div>
       </section>
+      )}
 
       {/* ── FOOTER ── */}
       <footer className="py-16 bg-[#0D1F2D] text-white/50 text-center font-serif text-xs border-t border-white/5">
@@ -580,9 +583,7 @@ export default function Tunisian({ template }: TunisianProps) {
         <div className="w-24 h-px bg-[#D4AF37]/30 mx-auto mb-8" />
         <p>
           Design Premium 4K par{" "}
-          <a href="https://farhty.tn" className="text-[#D4AF37] hover:text-white transition-colors underline decoration-[#D4AF37]/50 underline-offset-4">
-            Farhty
-          </a>{" "}
+          <FarhtyLink className="text-[#D4AF37] hover:text-white transition-colors underline decoration-[#D4AF37]/50 underline-offset-4" />{" "}
           · {new Date().getFullYear()}
         </p>
       </footer>

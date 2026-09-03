@@ -27,7 +27,7 @@ const jsonLd = {
       name: "فرحتي",
       alternateName: "Farhty",
       url: "https://www.farhty.me",
-      logo: "https://www.farhty.me/logo.jpg",
+      logo: "https://www.farhty.me/brand/icon-primary.png",
       description:
         "منصّة تونسية لصناعة دعوات الزفاف والمناسبات الإلكترونية التفاعلية.",
       areaServed: { "@type": "Country", name: "Tunisia" },

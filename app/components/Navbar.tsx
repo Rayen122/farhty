@@ -25,7 +25,7 @@ export default function Navbar() {
         {/* Brand Logo */}
         <Link href="/" className="flex items-center gap-3 text-decoration-none group cursor-pointer">
           <div className="w-12 h-12 relative flex-shrink-0 group-hover:scale-105 transition-transform overflow-hidden rounded-full border-2 border-[var(--color-line)]">
-            <img src="/logo.jpg" alt="Farhty Logo" className="w-full h-full object-cover" />
+            <img src="/brand/icon-primary.png" alt="Farhty Logo" className="w-full h-full object-contain p-1.5" />
           </div>
         </Link>
 

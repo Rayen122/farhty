@@ -27,7 +27,7 @@ export default function Footer() {
           <div className="md:col-span-2 space-y-6">
             <div className="flex items-center gap-4">
               <div className="w-16 h-16 relative flex-shrink-0 overflow-hidden rounded-full border-2 border-[var(--color-line)] shadow-sm">
-                <img src="/logo.jpg" alt="Farhty Logo" className="w-full h-full object-cover" />
+                <img src="/brand/icon-primary.png" alt="Farhty Logo" className="w-full h-full object-contain p-2" />
               </div>
               <div className="flex flex-col">
                 <span className="font-extrabold text-3xl text-[var(--color-coral)] tracking-wide" style={{ fontFamily: "var(--font-display)" }}>

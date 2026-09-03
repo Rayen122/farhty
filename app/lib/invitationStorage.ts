@@ -59,6 +59,8 @@ export interface InvitationRecord {
   payment: Payment;
   /** Numéro de téléphone du client pour le contacter via WhatsApp */
   phone?: string;
+  /** Id de l'invitation depuis laquelle ce client est arrivé (parrainage) */
+  referredBy?: string;
   createdAt: string;
   updatedAt: string;
 }
@@ -78,6 +80,8 @@ export function toPublic(record: InvitationRecord): PublicInvitation {
     plan: record.plan,
     payment: record.payment,
     phone: record.phone,
+    /* `referredBy` reste volontairement absent : cette route est publique, et
+       le champ relie deux mariages entre eux. L'admin le lit via `list()`. */
     createdAt: record.createdAt,
     updatedAt: record.updatedAt,
   };
@@ -231,6 +235,7 @@ function neonDriver(connectionString: string): StorageDriver {
     plan: PlanId;
     payment: Payment;
     phone: string | null;
+    referred_by: string | null;
     created_at: string;
     updated_at: string;
   };
@@ -245,6 +250,7 @@ function neonDriver(connectionString: string): StorageDriver {
     plan: r.plan,
     payment: r.payment,
     phone: r.phone ?? undefined,
+    referredBy: r.referred_by ?? undefined,
     createdAt: new Date(r.created_at).toISOString(),
     updatedAt: new Date(r.updated_at).toISOString(),
   });
@@ -252,7 +258,7 @@ function neonDriver(connectionString: string): StorageDriver {
   return {
     async create(record) {
       await sql`
-        insert into invitations (id, edit_token, slug, draft, geo, layout, plan, payment, phone, created_at, updated_at)
+        insert into invitations (id, edit_token, slug, draft, geo, layout, plan, payment, phone, referred_by, created_at, updated_at)
         values (${record.id}, ${record.editToken}, ${record.slug},
                 ${JSON.stringify(record.draft)}::jsonb,
                 ${record.geo ? JSON.stringify(record.geo) : null}::jsonb,
@@ -260,6 +266,7 @@ function neonDriver(connectionString: string): StorageDriver {
                 ${record.plan},
                 ${JSON.stringify(record.payment)}::jsonb,
                 ${record.phone ?? null},
+                ${record.referredBy ?? null},
                 ${record.createdAt}, ${record.updatedAt})
       `;
     },

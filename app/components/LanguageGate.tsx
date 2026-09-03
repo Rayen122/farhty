@@ -49,9 +49,9 @@ export default function LanguageGate() {
             className="w-full max-w-md rounded-[28px] bg-[var(--color-cream)] border border-[var(--color-line)] shadow-2xl p-7 sm:p-9 text-center"
           >
             <img
-              src="/logo.jpg"
+              src="/brand/icon-primary.png"
               alt="Farhty"
-              className="w-16 h-16 rounded-full object-cover mx-auto mb-5 border-2 border-[var(--color-line)]"
+              className="w-16 h-16 rounded-full object-contain p-2.5 mx-auto mb-5 border-2 border-[var(--color-line)] bg-white"
             />
 
             {/* Bilingue à dessein : à cet instant on ignore encore la langue du visiteur. */}

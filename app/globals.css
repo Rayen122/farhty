@@ -1,41 +1,41 @@
 @import "tailwindcss";
 
 @theme inline {
-  --color-cream: #FAF6F0; /* Light cream */
+  --color-cream: #F6E7CF; /* Brand tertiary — warm cream */
   --color-card: #FFFFFF; /* White */
-  --color-ink: #1C1318; /* Dark ink */
-  --color-muted: #6B5B65; /* Muted text */
-  --color-coral: #8B0A1A; /* Burgundy */
-  --color-coral-dark: #660511; /* Dark Burgundy */
-  --color-coral-text: #F4E4BA; /* Light text for burgundy bg */
-  --color-teal: #0F4C3A; /* Forest green */
-  --color-teal-dark: #0A3629;
-  --color-teal-text: #F4E4BA;
-  --color-gold: #D4AF37;
-  --color-gold-light: #F4E4BA;
-  --color-velvet: #FDF5F8; /* Blush pink */
-  --color-line: #EFE4D6;
-  --color-line-soft: #F5EEE6;
+  --color-ink: #3D1D24; /* Dark shade of brand primary */
+  --color-muted: #8C6970; /* Muted rose-brown */
+  --color-coral: #582932; /* Brand primary */
+  --color-coral-dark: #3D1D24; /* Darker brand primary */
+  --color-coral-text: #FFFFFF; /* Text on primary bg */
+  --color-teal: #88893B; /* Brand custom 1 — olive */
+  --color-teal-dark: #5F6029;
+  --color-teal-text: #FFFFFF;
+  --color-gold: #BD8A90; /* Brand secondary — rose */
+  --color-gold-light: #F6E7CF;
+  --color-velvet: #F3E4E7; /* Light tint of brand secondary */
+  --color-line: #E6D5D8;
+  --color-line-soft: #F1E6E4;
   --font-display: var(--font-lalezar), 'Lalezar', var(--font-amiri), 'Amiri', system-ui, sans-serif;
   --font-body: var(--font-cairo), 'Cairo', var(--font-tajawal), system-ui, sans-serif;
 }
 
 :root {
-  --color-cream: #FAF6F0;
+  --color-cream: #F6E7CF;
   --color-card: #FFFFFF;
-  --color-ink: #1C1318;
-  --color-muted: #6B5B65;
-  --color-coral: #8B0A1A;
-  --color-coral-dark: #660511;
-  --color-coral-text: #F4E4BA;
-  --color-teal: #0F4C3A;
-  --color-teal-dark: #0A3629;
-  --color-teal-text: #F4E4BA;
-  --color-gold: #D4AF37;
-  --color-gold-light: #F4E4BA;
-  --color-velvet: #FDF5F8;
-  --color-line: #EFE4D6;
-  --color-line-soft: #F5EEE6;
+  --color-ink: #3D1D24;
+  --color-muted: #8C6970;
+  --color-coral: #582932;
+  --color-coral-dark: #3D1D24;
+  --color-coral-text: #FFFFFF;
+  --color-teal: #88893B;
+  --color-teal-dark: #5F6029;
+  --color-teal-text: #FFFFFF;
+  --color-gold: #BD8A90;
+  --color-gold-light: #F6E7CF;
+  --color-velvet: #F3E4E7;
+  --color-line: #E6D5D8;
+  --color-line-soft: #F1E6E4;
   --ff-lalezar: var(--font-lalezar), 'Lalezar', cursive;
   --ff-tajawal: var(--font-tajawal), 'Tajawal', sans-serif;
   --ff-amiri: var(--font-amiri), 'Amiri', serif;
@@ -49,10 +49,13 @@
 
 /* En français, les polices arabes n'ont pas de glyphes latins soignés : on
    bascule sur les latines déjà chargées par le layout. `lang` est posé sur
-   <html> par LocaleProvider, donc le changement suit le choix de langue. */
+   <html> par LocaleProvider, donc le changement suit le choix de langue.
+   Ce sont aussi les polices de la charte graphique Farhty (DM Serif Display /
+   Montserrat) : la marque n'a pas de version arabe, donc le rebrand
+   typographique ne s'applique qu'ici — l'arabe garde ses polices dédiées. */
 :root:lang(fr) {
-  --font-display: var(--font-playfair), 'Playfair Display', Georgia, serif;
-  --font-body: var(--font-dm-sans), 'DM Sans', system-ui, sans-serif;
+  --font-display: var(--font-dm-serif), 'DM Serif Display', Georgia, serif;
+  --font-body: var(--font-montserrat), 'Montserrat', system-ui, sans-serif;
 }
 
 html {
