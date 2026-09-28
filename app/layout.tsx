@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Lalezar, Tajawal, Fredoka, Vazirmatn, Playfair_Display, DM_Sans, DM_Serif_Display, Montserrat, Great_Vibes, Cormorant_Infant, Amiri, Cairo } from "next/font/google";
 import "./globals.css";
 import AntiCopyGuard from "./components/AntiCopyGuard";
@@ -109,6 +109,11 @@ export const metadata: Metadata = {
     "invitation mariage Tunisie",
   ],
   applicationName: SITE_NAME,
+  appleWebApp: {
+    capable: true,
+    title: SITE_NAME,
+    statusBarStyle: "default",
+  },
   alternates: { canonical: "/" },
   openGraph: {
     type: "website",
@@ -130,6 +135,10 @@ export const metadata: Metadata = {
     follow: true,
     googleBot: { index: true, follow: true, "max-image-preview": "large" },
   },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#582932",
 };
 
 export default function RootLayout({
