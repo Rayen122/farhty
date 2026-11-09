@@ -86,7 +86,15 @@ function TemplateContent({
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      if (window.self !== window.top || window.location.search.includes("embed=1")) {
+      /* Aperçu seulement dans une page Farhty (maquette du téléphone, éditeur) : affiché
+         dans un autre site (Glowy), le modèle garde sa barre et son bouton de choix. */
+      let inFarhtyFrame = false;
+      try {
+        inFarhtyFrame = window.self !== window.top && window.parent.location.origin === window.location.origin;
+      } catch {
+        /* parent d'un autre site : son adresse est illisible */
+      }
+      if (inFarhtyFrame || window.location.search.includes("embed=1")) {
         setInIframe(true);
         document.documentElement.classList.add("is-embed");
         document.body.classList.add("is-embed");
