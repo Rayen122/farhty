@@ -12,6 +12,8 @@ import {
 } from "../lib/i18n";
 
 export const LOCALE_STORAGE_KEY = "farhty-locale";
+/** Posé dans `sessionStorage` : le sélecteur revient à chaque nouvelle visite, pas à chaque page. */
+const LOCALE_SESSION_KEY = "farhty-locale-chosen";
 
 type LocaleContextValue = {
   locale: Locale;
@@ -34,17 +36,19 @@ export default function LocaleProvider({ children }: { children: React.ReactNode
   const [ready, setReady] = useState(false);
   const [hasChosen, setHasChosen] = useState(false);
 
+  /* La langue retenue s'applique d'emblée derrière le sélecteur, mais on redemande
+     à chaque visite : le clic sert aussi de geste utilisateur qui débloque le son. */
   useEffect(() => {
     let stored: string | null = null;
+    let chosenThisVisit = false;
     try {
       stored = localStorage.getItem(LOCALE_STORAGE_KEY);
+      chosenThisVisit = sessionStorage.getItem(LOCALE_SESSION_KEY) === "1";
     } catch {
       /* navigation privée ou stockage bloqué : on reste sur la langue par défaut */
     }
-    if (isLocale(stored)) {
-      setLocaleState(stored);
-      setHasChosen(true);
-    }
+    if (isLocale(stored)) setLocaleState(stored);
+    setHasChosen(chosenThisVisit && isLocale(stored));
     setReady(true);
   }, []);
 
@@ -60,6 +64,7 @@ export default function LocaleProvider({ children }: { children: React.ReactNode
     setHasChosen(true);
     try {
       localStorage.setItem(LOCALE_STORAGE_KEY, next);
+      sessionStorage.setItem(LOCALE_SESSION_KEY, "1");
     } catch {
       /* le choix ne survivra pas à la session, mais la page fonctionne quand même */
     }

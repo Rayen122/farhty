@@ -6,11 +6,11 @@ import { LOCALES, LOCALE_DIR, LOCALE_LABELS, type Locale } from "../lib/i18n";
 import { useLocale } from "./LocaleProvider";
 
 /**
- * Sélecteur de langue affiché à la première visite.
+ * Sélecteur de langue affiché à chaque visite (une fois par session d'onglet).
  *
- * Il n'apparaît qu'une fois : le choix est retenu, et on peut en changer depuis
- * le pied de page. Pas de bouton « fermer » — choisir est l'action, et l'arabe
- * reste sélectionné par défaut derrière, donc aucune impasse possible.
+ * La dernière langue choisie reste appliquée derrière, et on peut en changer
+ * depuis le pied de page. Pas de bouton « fermer » — choisir est l'action, donc
+ * aucune impasse possible.
  */
 export default function LanguageGate() {
   const { setLocale, ready, hasChosen } = useLocale();
