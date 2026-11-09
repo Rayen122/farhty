@@ -134,7 +134,11 @@ export default function TemplateAdvisor() {
           voiceRef.current?.pause();
           voiceRef.current = recorded;
         },
-        () => {
+        (error: unknown) => {
+          /* Avant le premier clic, le navigateur bloque toute lecture automatique
+             (NotAllowedError) : le fichier existe, on se tait simplement. Le
+             marquer absent ferait parler la synthèse pour toute la session. */
+          if (error instanceof DOMException && error.name === "NotAllowedError") return;
           missingRecording.current.add(locale);
           speakSynthesised(phrase);
         }
